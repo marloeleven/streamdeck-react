@@ -1,0 +1,19 @@
+Design structure
+
+Action
+  - will try to connect to XBC websocket 
+     - on load
+     - on device connect
+     - on app open
+     - with interval (if ever websocket server)
+
+Property Inspector
+
+
+XBC Extension to handle commands
+ - or better if we just have an open websocket server available for connection
+
+ - will create streamdeck websocket instance
+
+ - should have a way to send data back to stream deck plugin
+ - will receive events and run the command base from data
