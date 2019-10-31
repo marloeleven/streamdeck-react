@@ -1,4 +1,7 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+
+import Input, { RadioWrapper } from 'components/Input';
+import Wrapper from 'components/Wrapper';
 
 import COMPONENTS from 'const/components';
 
@@ -8,8 +11,28 @@ import handler from 'handlers/PropertyInspector';
 
 import Scene from 'containers/Scene';
 
+const renderComponent = type => {
+  switch (type) {
+    case COMPONENTS.SCENE:
+      return <Scene />;
+    case 'radio':
+      return (
+        <Wrapper.Radio label="Test">
+          <Input.Radio defaultValue="test" label="on" />
+        </Wrapper.Radio>
+      );
+    case 'email':
+      return <Input.Email />;
+    case 'password':
+      return <Input.Password />;
+    default:
+      return <Scene />;
+  }
+};
+
 export default () => {
-  const [isConnecting, setIsConnecting] = useState(true);
+  // const [isConnecting, setIsConnecting] = useState(true); // @DEBUG
+  const [isConnecting, setIsConnecting] = useState(!true); // DEBUG
   const [componentType, setComponentType] = useState(COMPONENTS.SCENE);
 
   useEffect(() => {
@@ -53,18 +76,10 @@ export default () => {
     };
   }, []);
 
-  const renderContent = useCallback(() => {
-    if (isConnecting) {
-      return null;
-    }
+  if (isConnecting) {
+    return null;
+  }
 
-    switch (componentType) {
-      case COMPONENTS.SCENE:
-        return <Scene />;
-      default:
-        return <Scene />;
-    }
-  }, [componentType, isConnecting]);
-
-  return renderContent();
+  // return <div className="sdpi-wrapper">{renderComponent(componentType)}</div>;
+  return <div className="sdpi-wrapper">{renderComponent('password')}</div>;
 };
