@@ -1,29 +1,29 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
-import Input, { RadioWrapper } from 'components/Input';
-import Wrapper from 'components/Wrapper';
+import Input, { RadioWrapper } from "components/Input";
+import Wrapper from "components/Wrapper";
 
-import COMPONENTS from 'const/components';
+import COMPONENTS from "const/components";
 
-import WebSocket from 'utils/websocket';
+import WebSocket from "utils/websocket";
 
-import handler from 'handlers/PropertyInspector';
+import handler from "handlers/PropertyInspector";
 
-import Scene from 'containers/Scene';
+import Scene from "containers/Scene";
 
 const renderComponent = type => {
   switch (type) {
     case COMPONENTS.SCENE:
       return <Scene />;
-    case 'radio':
+    case "radio":
       return (
         <Wrapper.Radio label="Test">
           <Input.Radio defaultValue="test" label="on" />
         </Wrapper.Radio>
       );
-    case 'email':
+    case "email":
       return <Input.Email />;
-    case 'password':
+    case "password":
       return <Input.Password />;
     default:
       return <Scene />;
@@ -47,7 +47,7 @@ export default () => {
         websocket.send(
           JSON.stringify({
             event,
-            uuid,
+            uuid
           })
         );
 
@@ -66,13 +66,13 @@ export default () => {
         port,
         handler: {
           open: onOpen,
-          message: onMessage,
-        },
+          message: onMessage
+        }
       });
 
       const { action } = JSON.parse(inActionInfo);
 
-      setComponentType(action.split('.').pop());
+      setComponentType(action.split(".").pop());
     };
   }, []);
 
@@ -80,6 +80,6 @@ export default () => {
     return null;
   }
 
-  // return <div className="sdpi-wrapper">{renderComponent(componentType)}</div>;
-  return <div className="sdpi-wrapper">{renderComponent('password')}</div>;
+  return <div className="sdpi-wrapper">{renderComponent(componentType)}</div>;
+  // return <div className="sdpi-wrapper">{renderComponent('password')}</div>;
 };

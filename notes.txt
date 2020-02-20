@@ -1,7 +1,7 @@
 Design structure
 
 Action
-  - will try to connect to XBC websocket 
+  - will try to connect to XBC websocket
      - on load
      - on device connect
      - on app open
@@ -17,3 +17,41 @@ XBC Extension to handle commands
 
  - should have a way to send data back to stream deck plugin
  - will receive events and run the command base from data
+
+
+/**
+ CODE
+
+
+Handlers
+
+XSplithandler
+ - handles communication request to XSplit Extension
+    - get scenes
+
+AsyncHandler
+ - manages callback promises
+    - events are namespaced so collisions won't happen
+
+BaseHandler
+ - general streamdeck methods
+
+PropertyInspertorHandler
+ - extends BaseHandler
+
+PluginHandler
+ - extends BaseHandler
+
+
+/**
+
+const/action -- correspond to manifest
+
+const/events -- correspond to actions in Extension (Elgato Streamdeck like request)
+
+
+
+
+PROBLEM/BUG
+
+ - Inspector request is triggered first before the websocket communication is established

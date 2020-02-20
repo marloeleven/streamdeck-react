@@ -1,6 +1,6 @@
-import { isFunction, isObject } from 'utils/function';
-import EVENTS, { PLUGIN_EVENTS, GLOBAL_EVENTS } from 'const/events';
-import BaseHandler from './BaseHandler';
+import { isFunction, isObject } from "utils/function";
+import EVENTS, { PLUGIN_EVENTS, GLOBAL_EVENTS } from "const/events";
+import BaseHandler from "./BaseHandler";
 
 class PropertyInspector extends BaseHandler {
   init(args) {
@@ -26,7 +26,7 @@ class PropertyInspector extends BaseHandler {
         Object.assign(args, {
           action,
           event: EVENTS.PLUGIN.SEND,
-          payload: { ...args.payload, event },
+          payload: { ...args.payload, event }
         });
       }
     }

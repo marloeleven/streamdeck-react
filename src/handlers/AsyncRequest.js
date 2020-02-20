@@ -12,11 +12,12 @@ export const getCallback = (eventName, payload) => {
   return false;
 };
 
+// used
 export const createRequest = eventName => {
   return new Promise((resolve, reject) => {
     const asyncTimeout = setTimeout(() => {
       delete callbacks[eventName];
-      reject('No response received');
+      reject("No response received");
     }, ASYNC_TIMEOUT);
 
     callbacks[eventName] = {
@@ -27,7 +28,7 @@ export const createRequest = eventName => {
       clean: () => {
         clearTimeout(asyncTimeout);
         delete callbacks[eventName];
-      },
+      }
     };
   });
 };

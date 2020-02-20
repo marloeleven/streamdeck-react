@@ -1,6 +1,6 @@
-import { isFunction, isObject, parse } from 'utils/function';
-import { createRequest, getCallback } from 'handlers/AsyncRequest';
-import EVENTS from 'const/events';
+import { isFunction, isObject, parse } from "utils/function";
+import { createRequest, getCallback } from "handlers/AsyncRequest";
+import EVENTS from "const/events";
 
 export default class {
   constructor() {
@@ -10,7 +10,7 @@ export default class {
     this.globalSettings = {};
 
     this.on(EVENTS.RECEIVE.SETTINGS, settings => {
-      console.warn('get local settings', settings);
+      console.warn("get local settings", settings);
       this.settings = settings;
     });
 
@@ -34,7 +34,7 @@ export default class {
     this.send({
       event,
       context,
-      payload,
+      payload
     });
   }
 
@@ -43,7 +43,7 @@ export default class {
   }
 
   setSettings(payload) {
-    const context = this.context || '';
+    const context = this.context || "";
     const event = EVENTS.SET.SETTINGS;
 
     this.settings = payload;
@@ -51,7 +51,7 @@ export default class {
     this.send({
       event,
       context,
-      payload,
+      payload
     });
   }
 
@@ -61,19 +61,22 @@ export default class {
 
     const payload = {
       title,
-      target,
+      target
     };
 
     this.send({
       event,
       context,
-      payload,
+      payload
     });
   }
 
   getSettings() {
     const { context } = this;
     const event = EVENTS.GET.SETTINGS;
+
+    console.warn({ context, event });
+
     this.send({ event, context });
 
     return createRequest(event);
@@ -85,7 +88,7 @@ export default class {
 
     this.send({
       event,
-      payload,
+      payload
     });
   }
 
@@ -95,7 +98,7 @@ export default class {
 
     this.send({
       event,
-      payload,
+      payload
     });
   }
 
@@ -108,6 +111,7 @@ export default class {
     this.actionInfo = parse(inActionInfo);
   }
 
+  // HANDLES STREAMDECK COMMUNICATION
   send(args) {
     if (isObject(this.websocket) && isFunction(this.websocket.send)) {
       this.websocket.send(JSON.stringify(args));

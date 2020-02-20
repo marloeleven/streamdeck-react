@@ -1,17 +1,17 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from "react";
 
-import handler from 'handlers/PropertyInspector';
+import handler from "handlers/PropertyInspector";
 
-import XSplit from 'utils/xsplit';
+import XSplit from "utils/xsplit";
 
-import EVENTS from 'const/events';
-import ACTIONS from 'const/actions';
+import EVENTS from "const/events";
+import ACTIONS from "const/actions";
 
-import Select from 'components/Select';
+import Select from "components/Select";
 
 export default () => {
   const [scenesList, setScenesList] = useState([]);
-  const [selectedScene, setSelectedScene] = useState({ index: 0, id: '' });
+  const [selectedScene, setSelectedScene] = useState("");
 
   const onChange = useCallback(
     ({ target }) => {
@@ -19,9 +19,9 @@ export default () => {
       const scene = scenesList[index];
       const { id } = scene;
 
-      setSelectedScene({ id, index });
+      setSelectedScene(id);
 
-      handler.setSettings({ ...scene, index });
+      handler.setSettings(scene);
 
       handler.setTitle(scene.name);
     },
@@ -29,9 +29,15 @@ export default () => {
   );
 
   useEffect(() => {
-    XSplit.getAllScenes().then(setScenesList);
-    // .then(() => XSplit.getActiveScene())
-    // .then(scene => console.warn('active scene', scene));
+    XSplit.getAllScenes()
+      .then(setScenesList)
+      .then(() => {
+        console.warn("handler.getSettings");
+        handler.getSettings().then(({ settings: { id } }) => {
+          console.warn("saved id:", { id });
+          setSelectedScene(id);
+        });
+      });
 
     handler.setAction(ACTIONS.SCENE);
 
@@ -40,14 +46,12 @@ export default () => {
     // target
     // notify on scenes list change
     handler.on(EVENTS.RECEIVE.SCENES, payload => {
-      console.warn('scenesList', payload);
+      console.warn("scenesList", payload);
 
       // setScenesList();
     });
 
-    handler
-      .getSettings()
-      .then(({ settings: { id, index } }) => setSelectedScene({ index, id }));
+    console.warn("initialize");
   }, []);
 
   return (
