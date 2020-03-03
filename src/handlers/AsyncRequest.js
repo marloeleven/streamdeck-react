@@ -12,7 +12,6 @@ export const getCallback = (eventName, payload) => {
   return false;
 };
 
-// used
 export const createRequest = eventName => {
   return new Promise((resolve, reject) => {
     const asyncTimeout = setTimeout(() => {

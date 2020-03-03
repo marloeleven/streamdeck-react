@@ -5,11 +5,11 @@ import Wrapper from "components/Wrapper";
 
 import COMPONENTS from "const/components";
 
-import WebSocket from "utils/websocket";
-
 import handler from "handlers/PropertyInspector";
 
 import Scene from "containers/Scene";
+
+import { connect } from "handlers/SDConnect";
 
 const renderComponent = type => {
   switch (type) {
@@ -32,48 +32,16 @@ const renderComponent = type => {
 
 export default () => {
   // const [isConnecting, setIsConnecting] = useState(true); // @DEBUG
-  const [isConnecting, setIsConnecting] = useState(!true); // DEBUG
+  const [isConnecting, setIsConnecting] = useState(true); // DEBUG
   const [componentType, setComponentType] = useState(COMPONENTS.SCENE);
 
   useEffect(() => {
-    window.connectElgatoStreamDeckSocket = (
-      port,
-      uuid,
-      event,
-      inApplicationInfo,
-      inActionInfo
-    ) => {
-      const onOpen = () => {
-        websocket.send(
-          JSON.stringify({
-            event,
-            uuid
-          })
-        );
-
-        handler.init({ websocket, uuid, inApplicationInfo, inActionInfo });
-
-        setIsConnecting(false);
-      };
-
-      const onMessage = ({ data }) => {
-        const { payload, event } = JSON.parse(data);
-
-        handler.onPayload(event, payload);
-      };
-
-      const websocket = WebSocket.connect({
-        port,
-        handler: {
-          open: onOpen,
-          message: onMessage
-        }
-      });
-
+    connect(handler).then(inActionInfo => {
       const { action } = JSON.parse(inActionInfo);
 
       setComponentType(action.split(".").pop());
-    };
+      setIsConnecting(false);
+    });
   }, []);
 
   if (isConnecting) {

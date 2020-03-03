@@ -1,4 +1,3 @@
-import { isFunction, isObject } from "utils/function";
 import EVENTS, { PLUGIN_EVENTS, GLOBAL_EVENTS } from "const/events";
 import BaseHandler from "./BaseHandler";
 
@@ -18,22 +17,35 @@ class PropertyInspector extends BaseHandler {
   send(args) {
     const { event } = args;
 
-    if (GLOBAL_EVENTS.concat(PLUGIN_EVENTS).includes(event)) {
+    if (PLUGIN_EVENTS.includes(event)) {
+      this.sendToPlugin(args);
+      return;
+    }
+
+    if (GLOBAL_EVENTS.includes(event)) {
       args.context = this.uuid;
-
-      if (PLUGIN_EVENTS.includes(event)) {
-        const { action } = this;
-        Object.assign(args, {
-          action,
-          event: EVENTS.PLUGIN.SEND,
-          payload: { ...args.payload, event }
-        });
-      }
     }
 
-    if (isObject(this.websocket) && isFunction(this.websocket.send)) {
-      super.send(args);
-    }
+    super.send(args);
+  }
+
+  sendToPlugin(args) {
+    const { action, uuid: context } = this;
+
+    Object.assign(args, {
+      context,
+      action,
+      event: EVENTS.PLUGIN.SEND,
+      payload: { ...args.payload, event: args.event }
+    });
+
+    super.send(args);
+  }
+
+  onMessage({ data }) {
+    const { payload, event } = JSON.parse(data);
+
+    this.onPayload(event, payload);
   }
 }
 

@@ -1,6 +1,6 @@
-import WebSocket from 'utils/websocket';
-import { createRequest, getCallback } from 'handlers/AsyncRequest';
-import EVENTS from 'const/events';
+import WebSocket from "utils/websocket";
+import { createRequest, getCallback } from "handlers/AsyncRequest";
+import EVENTS from "const/events";
 
 class XSpltHandler {
   init({ websocket }) {
@@ -9,9 +9,9 @@ class XSpltHandler {
 
   onPayload(event, payload) {
     switch (event) {
-      case EVENTS.SET.ACTIVE_SCENE:
-      case EVENTS.GET.ACTIVE_SCENE:
-      case EVENTS.GET.SCENES:
+      case EVENTS.XSPLIT.SET.ACTIVE_SCENE:
+      case EVENTS.XSPLIT.GET.ACTIVE_SCENE:
+      case EVENTS.XSPLIT.GET.SCENES:
         getCallback(event, payload);
         break;
       default:
@@ -25,7 +25,7 @@ class XSpltHandler {
   }
 
   getActiveScene() {
-    const event = EVENTS.GET.ACTIVE_SCENE;
+    const event = EVENTS.XSPLIT.GET.ACTIVE_SCENE;
 
     this.send({ event });
 
@@ -33,7 +33,7 @@ class XSpltHandler {
   }
 
   setActiveScene({ id, index }) {
-    const event = EVENTS.SET.ACTIVE_SCENE;
+    const event = EVENTS.XSPLIT.SET.ACTIVE_SCENE;
 
     this.send({ event, payload: { id, index } });
 
@@ -41,7 +41,7 @@ class XSpltHandler {
   }
 
   getAllScenes() {
-    const event = EVENTS.GET.SCENES;
+    const event = EVENTS.XSPLIT.GET.SCENES;
     this.send({ event });
 
     return createRequest(event);
@@ -62,8 +62,8 @@ const connect = handler => ({ port }) => {
   const websocket = WebSocket.connect({
     port,
     handler: {
-      message: onMessage,
-    },
+      message: onMessage
+    }
   });
 
   handler.init({ websocket });

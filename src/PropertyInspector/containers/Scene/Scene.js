@@ -9,55 +9,64 @@ import ACTIONS from "const/actions";
 
 import Select from "components/Select";
 
+const getScene = (scenes, id) => {
+  const scene = scenes.find(scene => scene.id === id);
+
+  return scene || Object.values(scenes).shift();
+};
+
+const updateSettings = scene => {
+  handler.setSettings(scene);
+
+  handler.setTitle(scene.name);
+};
+
 export default () => {
   const [scenesList, setScenesList] = useState([]);
   const [selectedScene, setSelectedScene] = useState("");
 
   const onChange = useCallback(
     ({ target }) => {
-      const index = target.value;
-      const scene = scenesList[index];
-      const { id } = scene;
+      const scene = getScene(scenesList, target.value);
 
-      setSelectedScene(id);
-
-      handler.setSettings(scene);
-
-      handler.setTitle(scene.name);
+      setSelectedScene(scene.id);
+      updateSettings(scene);
     },
     [scenesList]
   );
 
   useEffect(() => {
-    XSplit.getAllScenes()
-      .then(setScenesList)
-      .then(() => {
-        console.warn("handler.getSettings");
-        handler.getSettings().then(({ settings: { id } }) => {
-          console.warn("saved id:", { id });
-          setSelectedScene(id);
-        });
-      });
-
+    // specify the manifest plugin action
     handler.setAction(ACTIONS.SCENE);
 
-    handler.on(EVENTS.ACTIVATE, () => {});
+    XSplit.getAllScenes().then(scenesList => {
+      setScenesList(scenesList);
+      handler.getSettings().then(({ settings: { id } }) => {
+        const scene = getScene(scenesList, id);
+        setSelectedScene(id);
+        updateSettings(scene);
+      });
+    });
 
-    // target
-    // notify on scenes list change
-    handler.on(EVENTS.RECEIVE.SCENES, payload => {
+    // @TODO
+    // listener to on activate
+    handler.on(EVENTS.ACTIVATE, () => {
+      // XSplit.setActiveScene(id)
+    });
+
+    // @TODO
+    // listen to scenes list changes
+    handler.on(EVENTS.XSPLIT.RECEIVE.SCENES, payload => {
       console.warn("scenesList", payload);
 
       // setScenesList();
     });
-
-    console.warn("initialize");
   }, []);
 
   return (
-    <Select value={selectedScene.index} onChange={onChange} label="Scene">
-      {scenesList.map(({ id, name }, index) => (
-        <Select.Option key={id} value={index}>
+    <Select value={selectedScene} onChange={onChange} label="Scene">
+      {scenesList.map(({ id, name }) => (
+        <Select.Option key={id} value={id}>
           {name}
         </Select.Option>
       ))}

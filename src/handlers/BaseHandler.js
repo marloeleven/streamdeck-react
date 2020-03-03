@@ -10,7 +10,6 @@ export default class {
     this.globalSettings = {};
 
     this.on(EVENTS.RECEIVE.SETTINGS, settings => {
-      console.warn("get local settings", settings);
       this.settings = settings;
     });
 
@@ -73,9 +72,8 @@ export default class {
 
   getSettings() {
     const { context } = this;
-    const event = EVENTS.GET.SETTINGS;
 
-    console.warn({ context, event });
+    const event = EVENTS.GET.SETTINGS;
 
     this.send({ event, context });
 

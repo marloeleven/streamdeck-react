@@ -38,9 +38,11 @@ BaseHandler
 
 PropertyInspertorHandler
  - extends BaseHandler
+ * Send commands/create request to XSplit
 
 PluginHandler
  - extends BaseHandler
+ * Sends command to streamdeck
 
 
 /**
@@ -52,6 +54,6 @@ const/events -- correspond to actions in Extension (Elgato Streamdeck like reque
 
 
 
-PROBLEM/BUG
 
- - Inspector request is triggered first before the websocket communication is established
+LEFT
+ onto implementing listener and recieving on activate event
