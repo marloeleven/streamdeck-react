@@ -1,8 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 
 import handler from "handlers/PropertyInspector";
-
-import XSplit from "utils/xsplit";
+import XSplit from "handlers/XSplit";
 
 import EVENTS from "const/events";
 import ACTIONS from "const/actions";
@@ -39,12 +38,14 @@ export default () => {
     // specify the manifest plugin action
     handler.setAction(ACTIONS.SCENE);
 
-    XSplit.getAllScenes().then(scenesList => {
+    XSplit.getAllScenes().then((scenesList = []) => {
+      console.warn("scene list", scenesList);
       setScenesList(scenesList);
       handler.getSettings().then(({ settings: { id } }) => {
-        const scene = getScene(scenesList, id);
         setSelectedScene(id);
-        updateSettings(scene);
+        const scene = getScene(scenesList, id);
+
+        scene && updateSettings(scene);
       });
     });
 

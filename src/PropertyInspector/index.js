@@ -5,11 +5,13 @@ import Wrapper from "components/Wrapper";
 
 import COMPONENTS from "const/components";
 
-import handler from "handlers/PropertyInspector";
+import PropertyInspector from "handlers/PropertyInspector";
 
 import Scene from "containers/Scene";
 
-import { connect } from "handlers/SDConnect";
+import useXSplit from "hooks/useXSplit";
+
+import { SDConnect } from "utils/connect";
 
 const renderComponent = type => {
   switch (type) {
@@ -32,19 +34,20 @@ const renderComponent = type => {
 
 export default () => {
   // const [isConnecting, setIsConnecting] = useState(true); // @DEBUG
-  const [isConnecting, setIsConnecting] = useState(true); // DEBUG
+  const [isConnected, setIsConnected] = useState(false); // DEBUG
   const [componentType, setComponentType] = useState(COMPONENTS.SCENE);
 
+  useXSplit({ isConnected, setIsConnected });
+
   useEffect(() => {
-    connect(handler).then(inActionInfo => {
+    SDConnect(PropertyInspector).then(inActionInfo => {
       const { action } = JSON.parse(inActionInfo);
 
       setComponentType(action.split(".").pop());
-      setIsConnecting(false);
     });
   }, []);
 
-  if (isConnecting) {
+  if (!isConnected) {
     return null;
   }
 

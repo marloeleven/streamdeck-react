@@ -1,15 +1,21 @@
-import { useEffect } from "react";
-import handler from "handlers/Plugin";
+import { useEffect, useState } from "react";
+import Plugin from "handlers/Plugin";
+import XSplit from "handlers/XSplit";
 
 import EVENTS from "const/events";
 
-import { connect } from "handlers/SDConnect";
-import XSplit from "utils/xsplit";
+import { SDConnect } from "utils/connect";
+
+import useXSplit from "hooks/useXSplit";
 
 export default () => {
+  const [isConnected, setIsConnected] = useState(true); // DEBUG
+
+  useXSplit({ isConnected, setIsConnected });
+
   useEffect(() => {
-    connect(handler).then(() => {
-      handler.on(EVENTS.PLUGIN.KEY_UP, ({ settings }) =>
+    SDConnect(Plugin).then(() => {
+      Plugin.on(EVENTS.PLUGIN.KEY_UP, ({ settings }) =>
         XSplit.setActiveScene(settings)
       );
     });

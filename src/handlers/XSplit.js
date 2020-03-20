@@ -1,12 +1,7 @@
-import WebSocket from "utils/websocket";
 import { createRequest, getCallback } from "handlers/AsyncRequest";
 import EVENTS from "const/events";
 
 class XSpltHandler {
-  init({ websocket }) {
-    this.ws = websocket;
-  }
-
   onPayload(event, payload) {
     switch (event) {
       case EVENTS.XSPLIT.SET.ACTIVE_SCENE:
@@ -19,9 +14,8 @@ class XSpltHandler {
     }
   }
 
-  // @TODO: improve
-  send(data) {
-    this.ws.send(JSON.stringify(data));
+  send() {
+    // overridden on utils/connect/XSplitConnect:23
   }
 
   getActiveScene() {
@@ -48,27 +42,4 @@ class XSpltHandler {
   }
 }
 
-const connect = handler => ({ port }) => {
-  const onMessage = ({ data }) => {
-    try {
-      const { event, payload } = JSON.parse(data);
-
-      handler.onPayload(event, payload);
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  const websocket = WebSocket.connect({
-    port,
-    handler: {
-      message: onMessage
-    }
-  });
-
-  handler.init({ websocket });
-
-  return handler;
-};
-
-export default connect(new XSpltHandler())({ port: 55511 });
+export default new XSpltHandler();

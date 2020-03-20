@@ -1,6 +1,6 @@
 import WebSocket from "utils/websocket";
 
-export const connect = handler => {
+export default handler => {
   return new Promise((resolve, reject) => {
     window.connectElgatoStreamDeckSocket = (
       port,

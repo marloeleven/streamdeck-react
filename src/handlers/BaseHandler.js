@@ -1,4 +1,4 @@
-import { isFunction, isObject, parse } from "utils/function";
+import { isFunction, isObject, parse, toString } from "utils/function";
 import { createRequest, getCallback } from "handlers/AsyncRequest";
 import EVENTS from "const/events";
 
@@ -112,7 +112,7 @@ export default class {
   // HANDLES STREAMDECK COMMUNICATION
   send(args) {
     if (isObject(this.websocket) && isFunction(this.websocket.send)) {
-      this.websocket.send(JSON.stringify(args));
+      this.websocket.send(toString(args));
     }
   }
 

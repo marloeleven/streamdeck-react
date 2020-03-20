@@ -57,3 +57,10 @@ const/events -- correspond to actions in Extension (Elgato Streamdeck like reque
 
 LEFT
  onto implementing listener and recieving on activate event
+
+
+
+
+// verify working connection
+
+// poll for connection on disconnect
