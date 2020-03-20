@@ -1,20 +1,14 @@
 import { useEffect } from "react";
-import connect, { xsplitConnect$ } from "utils/connect/XSplitConnect";
+import connect, { connectionState$ } from "utils/connect/XSplitConnect";
 
-export default ({ isConnected, setIsConnected }) => {
+export default setIsConnected => {
   useEffect(() => {
-    xsplitConnect$.subscribe(state => {
-      console.warn("state", state);
+    const subscription = connectionState$.subscribe(state => {
       setIsConnected(state);
     });
 
-    return () => xsplitConnect$.unsubscribe();
-  }, [setIsConnected]);
+    connect();
 
-  useEffect(() => {
-    if (!isConnected) {
-      console.warn("trigger connect");
-      connect();
-    }
-  }, [isConnected]);
+    return () => subscription.unsubscribe();
+  }, [setIsConnected]);
 };

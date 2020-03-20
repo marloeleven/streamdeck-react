@@ -37,7 +37,7 @@ export default () => {
   const [isConnected, setIsConnected] = useState(false); // DEBUG
   const [componentType, setComponentType] = useState(COMPONENTS.SCENE);
 
-  useXSplit({ isConnected, setIsConnected });
+  useXSplit(setIsConnected);
 
   useEffect(() => {
     SDConnect(PropertyInspector).then(inActionInfo => {
