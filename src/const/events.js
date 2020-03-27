@@ -1,51 +1,53 @@
 const EVENTS = {
-  ACTIVATE: "ACTIVATE",
+  SUBSCRIPTION: 'SUBSCRIPTION',
+  ACTIVATE: 'ACTIVATE',
   GET: {
-    SETTINGS: "getSettings",
-    GLOBAL_SETTINGS: "getGlobalSettings"
+    SETTINGS: 'getSettings',
+    GLOBAL_SETTINGS: 'getGlobalSettings',
   },
   SET: {
-    SETTINGS: "setSettings",
-    GLOBAL_SETTINGS: "setGlobalSettings",
-    TITLE: "setTitle"
+    SETTINGS: 'setSettings',
+    GLOBAL_SETTINGS: 'setGlobalSettings',
+    TITLE: 'setTitle',
   },
   RECEIVE: {
-    SCENES: "scenesList",
-    SETTINGS: "didReceiveSettings",
-    GLOBAL_SETTINGS: "didReceiveGlobalSettings"
+    SCENES: 'scenesList',
+    SETTINGS: 'didReceiveSettings',
+    GLOBAL_SETTINGS: 'didReceiveGlobalSettings',
   },
   PI: {
-    INIT: "INIT",
-    SEND: "sendToPropertyInspector",
-    APPEAR: "propertyInspectorDidAppear"
+    INIT: 'INIT',
+    SEND: 'sendToPropertyInspector',
+    APPEAR: 'propertyInspectorDidAppear',
   },
   PLUGIN: {
-    SEND: "sendToPlugin",
-    KEY_UP: "keyUp",
-    KEY_DOWN: "keyDown"
+    SEND: 'sendToPlugin',
+    KEY_UP: 'keyUp',
+    KEY_DOWN: 'keyDown',
   },
   XSPLIT: {
     GET: {
-      SCENES: "getAllScenes",
-      ACTIVE_SCENE: "getActiveScene"
+      SCENES: 'getAllScenes',
+      ACTIVE_SCENE: 'getActiveScene',
     },
     SET: {
-      ACTIVE_SCENE: "setActiveScene"
+      ACTIVE_SCENE: 'setActiveScene',
     },
     RECEIVE: {
-      SCENES: "scenesList"
-    }
+      SCENES: 'scenesList',
+    },
+    SUBSCRIPTION_EVENTS: {
+      SCENE_CHANGE: 'scenechange',
+      SCENES_LIST: 'sceneslist',
+    },
   },
-  OPEN_URL: "openUrl",
-  LOG_MESSAGE: "logMessage",
-  WILL_APPEAR: "willAppear"
+  OPEN_URL: 'openUrl',
+  LOG_MESSAGE: 'logMessage',
+  WILL_APPEAR: 'willAppear',
 };
 
 //
-export const PLUGIN_ACTION_EVENT = [
-  EVENTS.PLUGIN.KEY_UP,
-  EVENTS.PLUGIN.KEY_DOWN
-];
+export const PLUGIN_ACTION_EVENT = [EVENTS.PLUGIN.KEY_UP, EVENTS.PLUGIN.KEY_DOWN];
 
 // events that only exist on plugin
 export const PLUGIN_EVENTS = [EVENTS.SET.TITLE, EVENTS.PLUGIN.SEND];

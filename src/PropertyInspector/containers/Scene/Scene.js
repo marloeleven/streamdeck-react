@@ -1,12 +1,14 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from 'react';
 
-import handler from "handlers/PropertyInspector";
-import XSplit from "handlers/XSplit";
+import handler from 'handlers/PropertyInspector';
+import XSplit from 'handlers/XSplit';
 
-import EVENTS from "const/events";
-import ACTIONS from "const/actions";
+import EVENTS from 'const/events';
+import ACTIONS from 'const/actions';
 
-import Select from "components/Select";
+import Select from 'components/Select';
+
+const { SUBSCRIPTION_EVENTS: SUBSCRIPTION } = EVENTS.XSPLIT;
 
 const getScene = (scenes, id) => {
   const scene = scenes.find(scene => scene.id === id);
@@ -22,7 +24,7 @@ const updateSettings = scene => {
 
 export default () => {
   const [scenesList, setScenesList] = useState([]);
-  const [selectedScene, setSelectedScene] = useState("");
+  const [selectedScene, setSelectedScene] = useState('');
 
   const onChange = useCallback(
     ({ target }) => {
@@ -31,7 +33,7 @@ export default () => {
       setSelectedScene(scene.id);
       updateSettings(scene);
     },
-    [scenesList]
+    [scenesList],
   );
 
   useEffect(() => {
@@ -39,7 +41,7 @@ export default () => {
     handler.setAction(ACTIONS.SCENE);
 
     XSplit.getAllScenes().then((scenesList = []) => {
-      console.warn("scene list", scenesList);
+      console.warn('scene list', scenesList);
       setScenesList(scenesList);
       handler.getSettings().then(({ settings: { id } }) => {
         setSelectedScene(id);
@@ -49,18 +51,20 @@ export default () => {
       });
     });
 
+    XSplit.on(SUBSCRIPTION.SCENE_CHANGE, payload => {
+      console.warn('SUBSCRIPTION', payload);
+    });
+
+    XSplit.on(SUBSCRIPTION.SCENES_LIST, payload => {
+      console.warn('scenesList', payload);
+
+      setScenesList(payload);
+    });
+
     // @TODO
     // listener to on activate
     handler.on(EVENTS.ACTIVATE, () => {
       // XSplit.setActiveScene(id)
-    });
-
-    // @TODO
-    // listen to scenes list changes
-    handler.on(EVENTS.XSPLIT.RECEIVE.SCENES, payload => {
-      console.warn("scenesList", payload);
-
-      // setScenesList();
     });
   }, []);
 

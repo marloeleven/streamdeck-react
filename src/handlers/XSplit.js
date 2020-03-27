@@ -1,13 +1,32 @@
-import { createRequest, getCallback } from "handlers/AsyncRequest";
-import EVENTS from "const/events";
+import { createRequest, getCallback } from 'handlers/AsyncRequest';
+import EVENTS from 'const/events';
+import { parse } from 'utils/function';
 
 class XSpltHandler {
+  constructor() {
+    this.callbacks = {};
+  }
+
   onPayload(event, payload) {
     switch (event) {
       case EVENTS.XSPLIT.SET.ACTIVE_SCENE:
       case EVENTS.XSPLIT.GET.ACTIVE_SCENE:
       case EVENTS.XSPLIT.GET.SCENES:
         getCallback(event, payload);
+        break;
+      case EVENTS.SUBSCRIPTION:
+        /*
+          {
+            event: 'SUBSCRIPTION',
+            payload: {
+              event: 'ACTIVE_SCENE',
+              payload: [] / {}
+            }
+
+          }
+        */
+
+        this._handleSubscription(parse(payload));
         break;
       default:
         getCallback(event, payload); // fallback
@@ -39,6 +58,17 @@ class XSpltHandler {
     this.send({ event });
 
     return createRequest(event);
+  }
+
+  _handleSubscription({ event, payload }) {
+    if (this.callbacks.hasOwnProperty(event)) {
+      this.callbacks[event](parse(payload));
+    }
+  }
+
+  on(payload, callback) {
+    this.callbacks[payload] = callback;
+    this.send({ event: EVENTS.SUBSCRIPTION, payload });
   }
 }
 

@@ -1,46 +1,50 @@
-import connect from "streamdeck-xsplit-connect";
-import XSplitHandler from "handlers/XSplit";
-import { toString } from "utils/function";
-import { Subject, of } from "rxjs";
-import { delay } from "rxjs/operators";
+import connect from 'streamdeck-xsplit-connect';
+import XSplitHandler from 'handlers/XSplit';
+import { toString } from 'utils/function';
+import { Subject, of } from 'rxjs';
+import { delay } from 'rxjs/operators';
 
 export const connectionState$ = new Subject(false);
 
-const connectToXSplit = () =>
-  new Promise(resolve => {
-    const onMessage = ({ data }) => {
-      try {
-        const { event, payload } = JSON.parse(data);
+const connectToXSplit = () => {
+  const onMessage = ({ data }) => {
+    try {
+      const { event, payload } = JSON.parse(data);
+      console.warn({ event, payload });
 
-        XSplitHandler.onPayload(event, payload);
-      } catch (e) {
-        console.error(e);
-      }
+      XSplitHandler.onPayload(event, payload);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  connect([55511, 55512, 55513], channel => {
+    console.warn('connected', channel);
+    XSplitHandler.send = data => {
+      console.warn('send', data);
+      channel.send(toString(data));
+    };
+    connectionState$.next(true);
+
+    channel.onmessage = onMessage;
+    channel.onclose = () => {
+      console.warn('CONNECTION CLOSED');
+      connectionState$.next(false);
+    };
+    channel.onerror = err => {
+      console.error('ERROR CONNECTING TO RTC', err);
+      connectionState$.next(false);
     };
 
-    connect([55511, 55512, 55513], {
-      onOpen: channel => {
-        console.warn("RTC Connected");
-        XSplitHandler.send = data => channel.send(toString(data));
-        connectionState$.next(true);
-
-        channel.onclose = () => connectionState$.next(false);
-        channel.onerror = () => connectionState$.next(false);
-      },
-
-      onError: () => console.error("WebSocker Error"),
-      onClose: () => console.error("WebSocker Closed"),
-      onMessage
-    }).then(resolve);
+    window.addEventListener('beforeunload', () => channel.close());
   });
+};
 
 connectionState$.subscribe(state => {
   if (!state) {
-    of("")
+    of('')
       .pipe(delay(3000))
-      .subscribe(() => {
-        connectToXSplit();
-      });
+      .subscribe(connectToXSplit);
     return;
   }
 });

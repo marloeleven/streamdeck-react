@@ -9606,7 +9606,7 @@ stream-shift@^1.0.0:
 
 "streamdeck-xsplit-connect@https://gitlab.xsplit.com/xsplit-plugins/xjs-client-connect.git":
   version "1.0.0"
-  resolved "https://gitlab.xsplit.com/xsplit-plugins/xjs-client-connect.git#53818115e926f6c97c0f612ea2db33aa73fcff9e"
+  resolved "https://gitlab.xsplit.com/xsplit-plugins/xjs-client-connect.git#ac5c8101c4b27488fc0c4cd4e47dbf093a88a89f"
   dependencies:
     rxjs "^6.5.4"
 
