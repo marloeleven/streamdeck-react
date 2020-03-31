@@ -8,16 +8,21 @@ import COMPONENTS from 'const/components';
 import PropertyInspector from 'handlers/PropertyInspector';
 
 import Scene from 'containers/Scene';
+import Source from 'containers/Source';
 // import Output from 'containers/Output';
 
 import useXSplit from 'hooks/useXSplit';
 
 import { SDConnect } from 'utils/connect';
 
+import XSplit from 'handlers/XSplit';
+
 const renderComponent = type => {
   switch (type) {
     case COMPONENTS.SCENE:
       return <Scene />;
+    case COMPONENTS.SOURCE:
+      return <Source />;
     // case COMPONENTS.OUTPUTS:
     //   return <Output />;
     case 'radio':
@@ -35,6 +40,10 @@ const renderComponent = type => {
   }
 };
 
+// @DEBUGGING
+
+window.XSplit = XSplit;
+window.PropertyInspector = PropertyInspector;
 export default () => {
   const [isConnected, setIsConnected] = useState(false);
   const [componentType, setComponentType] = useState(COMPONENTS.SCENE);

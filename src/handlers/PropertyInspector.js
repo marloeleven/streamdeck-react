@@ -1,5 +1,5 @@
-import EVENTS, { PLUGIN_EVENTS, GLOBAL_EVENTS } from "const/events";
-import BaseHandler from "./BaseHandler";
+import EVENTS, { PLUGIN_EVENTS, GLOBAL_EVENTS } from 'const/events';
+import BaseHandler from './BaseHandler';
 
 class PropertyInspector extends BaseHandler {
   init(args) {
@@ -36,16 +36,17 @@ class PropertyInspector extends BaseHandler {
       context,
       action,
       event: EVENTS.PLUGIN.SEND,
-      payload: { ...args.payload, event: args.event }
+      payload: { ...args.payload, event: args.event },
     });
 
     super.send(args);
   }
 
   onMessage({ data }) {
-    const { payload, event } = JSON.parse(data);
+    const jsonData = JSON.parse(data);
+    const { event } = jsonData;
 
-    this.onPayload(event, payload);
+    this.onPayload(event, jsonData);
   }
 }
 

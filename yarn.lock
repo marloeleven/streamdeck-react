@@ -5026,6 +5026,11 @@ immer@1.10.0:
   resolved "https://registry.yarnpkg.com/immer/-/immer-1.10.0.tgz#bad67605ba9c810275d91e1c2a47d4582e98286d"
   integrity sha512-O3sR1/opvCDGLEVcvrGTMtLac8GJ5IwZC4puPrLuRj3l7ICKvkmA0vGuU9OW8mV9WIBRnaxp5GJh9IEAaNOoYg==
 
+immer@^6.0.2:
+  version "6.0.2"
+  resolved "https://registry.yarnpkg.com/immer/-/immer-6.0.2.tgz#5bc08dc4930c756d0749533a2afbd88c8de0cd19"
+  integrity sha512-56CMvUMZl4kkWJFFUe1TjBgGbyb9ibzpLyHD+RSKSVdytuDXgT/HXO1S+GJVywMVl5neGTdAogoR15eRVEd10Q==
+
 import-cwd@^2.0.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/import-cwd/-/import-cwd-2.1.0.tgz#aa6cf36e722761285cb371ec6519f53e2435b0a9"
@@ -9606,7 +9611,7 @@ stream-shift@^1.0.0:
 
 "streamdeck-xsplit-connect@https://gitlab.xsplit.com/xsplit-plugins/xjs-client-connect.git":
   version "1.0.0"
-  resolved "https://gitlab.xsplit.com/xsplit-plugins/xjs-client-connect.git#ac5c8101c4b27488fc0c4cd4e47dbf093a88a89f"
+  resolved "https://gitlab.xsplit.com/xsplit-plugins/xjs-client-connect.git#e2f43cecd5a34f99119711ecfb7285d1410fa54f"
   dependencies:
     rxjs "^6.5.4"
 

@@ -6,6 +6,7 @@
     "@rescripts/cli": "^0.0.12",
     "@rescripts/rescript-env": "^0.0.10",
     "classnames": "^2.2.6",
+    "immer": "^6.0.2",
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
     "react-observable": "^1.1.3",

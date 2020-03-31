@@ -1,20 +1,62 @@
-import BaseHandler from "./BaseHandler";
-import EVENTS from "const/events";
+import BaseHandler from './BaseHandler';
+import ActionsList from './ActionsListHandler';
+import EVENTS from 'const/events';
 
 class Plugin extends BaseHandler {
+  // set an ACTION Context
+  setState({ context, state }) {
+    const event = EVENTS.SET.STATE;
+
+    this.send({
+      event,
+      context,
+      payload: {
+        state,
+      },
+    });
+  }
+
+  // show an Ok Image to Action Instance
+  showOk({ context }) {
+    this.send({
+      event: EVENTS.SET.SHOW_OK,
+      context,
+    });
+  }
+  // show an Alert Image to Action Instance
+  showAlert({ context }) {
+    this.send({
+      event: EVENTS.SET.SHOW_ALERT,
+      context,
+    });
+  }
+
   onPayload(args) {
-    const { event, context, payload } = args;
+    const { event, context, action, payload } = args;
 
     if (event === EVENTS.PI.SEND) {
       this.send({
         event: payload.event,
         context,
-        payload
+        payload,
       });
       return;
     }
 
-    super.onPayload(event, payload);
+    if ([EVENTS.RECEIVE.SETTINGS, EVENTS.RECEIVE.GLOBAL_SETTINGS].includes(event)) {
+      this.emit(event, args);
+    }
+
+    switch (event) {
+      case EVENTS.PI.WILL_APPEAR:
+        ActionsList.add(ActionsList.getList(action), args);
+        break;
+      case EVENTS.PI.WILL_DISAPPEAR:
+        ActionsList.remove(ActionsList.getList(action), args);
+        break;
+      default:
+        super.onPayload(event, args);
+    }
   }
 
   onMessage({ data }) {
@@ -25,7 +67,7 @@ class Plugin extends BaseHandler {
       this.setContext(context);
     }
 
-    this.onPayload(JSON.parse(data));
+    this.onPayload(jsonData);
   }
 }
 

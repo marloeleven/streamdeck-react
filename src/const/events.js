@@ -9,6 +9,9 @@ const EVENTS = {
     SETTINGS: 'setSettings',
     GLOBAL_SETTINGS: 'setGlobalSettings',
     TITLE: 'setTitle',
+    STATE: 'setState',
+    SHOW_ALERT: 'showAlert',
+    SHOW_OK: 'showOk',
   },
   RECEIVE: {
     SCENES: 'scenesList',
@@ -19,6 +22,8 @@ const EVENTS = {
     INIT: 'INIT',
     SEND: 'sendToPropertyInspector',
     APPEAR: 'propertyInspectorDidAppear',
+    WILL_APPEAR: 'willAppear',
+    WILL_DISAPPEAR: 'willDisappear',
   },
   PLUGIN: {
     SEND: 'sendToPlugin',
@@ -27,10 +32,18 @@ const EVENTS = {
   },
   XSPLIT: {
     GET: {
-      SCENES: 'getAllScenes',
-      ACTIVE_SCENE: 'getActiveScene',
+      SCENE: {
+        ALL: 'getAllScenes',
+        ACTIVE: 'getActiveScene',
+      },
+      SOURCE: {
+        ALL: 'getSceneSources',
+        STATE: 'getSourceState',
+      },
+      OUTPUTS: 'getAllOutputs',
     },
     SET: {
+      SOURCE_STATE: 'setSourceState',
       ACTIVE_SCENE: 'setActiveScene',
     },
     RECEIVE: {
@@ -39,11 +52,12 @@ const EVENTS = {
     SUBSCRIPTION_EVENTS: {
       SCENE_CHANGE: 'scenechange',
       SCENES_LIST: 'sceneslist',
+      SOURCE_VISIBILIY: 'sourcevisibility',
+      OUTPUTS_LIST: 'outputslist',
     },
   },
   OPEN_URL: 'openUrl',
   LOG_MESSAGE: 'logMessage',
-  WILL_APPEAR: 'willAppear',
 };
 
 //

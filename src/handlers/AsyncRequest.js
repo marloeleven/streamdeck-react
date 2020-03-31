@@ -16,7 +16,7 @@ export const createRequest = eventName => {
   return new Promise((resolve, reject) => {
     const asyncTimeout = setTimeout(() => {
       delete callbacks[eventName];
-      reject("No response received");
+      reject('No response received');
     }, ASYNC_TIMEOUT);
 
     callbacks[eventName] = {
@@ -27,7 +27,17 @@ export const createRequest = eventName => {
       clean: () => {
         clearTimeout(asyncTimeout);
         delete callbacks[eventName];
-      }
+      },
     };
+  });
+};
+
+export const xsplitRequest = eventName => {
+  return createRequest(eventName).then(result => {
+    if (result.event === 'ERROR') {
+      throw new Error(`Error recieved`);
+    }
+
+    return result;
   });
 };

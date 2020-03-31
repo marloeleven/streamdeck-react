@@ -1,21 +1,21 @@
-import { isFunction, isObject, parse, toString } from "utils/function";
-import { createRequest, getCallback } from "handlers/AsyncRequest";
-import EVENTS from "const/events";
+import { isFunction, isObject, parse, toString } from 'utils/function';
+import { createRequest, getCallback } from 'handlers/AsyncRequest';
+import EVENTS from 'const/events';
 
 export default class {
   constructor() {
     this.callbacks = {};
 
-    this.settings = {};
-    this.globalSettings = {};
+    // this.settings = {};
+    // this.globalSettings = {};
 
-    this.on(EVENTS.RECEIVE.SETTINGS, settings => {
-      this.settings = settings;
-    });
+    // this.on(EVENTS.RECEIVE.SETTINGS, settings => {
+    //   this.settings = settings;
+    // });
 
-    this.on(EVENTS.RECEIVE.GLOBAL_SETTINGS, settings => {
-      this.globalSettings = settings;
-    });
+    // this.on(EVENTS.RECEIVE.GLOBAL_SETTINGS, settings => {
+    //   this.globalSettings = settings;
+    // });
   }
 
   setContext(context) {
@@ -28,29 +28,32 @@ export default class {
     const { context } = this;
     const event = EVENTS.SET.GLOBAL_SETTINGS;
 
-    this.globalSettings = payload;
-
     this.send({
       event,
       context,
-      payload
+      payload,
     });
   }
 
   getGlobalSettings() {
-    return this.globalSettings;
+    const event = EVENTS.GET.GLOBAL_SETTINGS;
+    const context = this.context || '';
+
+    this.send({ event, context });
+
+    return createRequest(event);
   }
 
   setSettings(payload) {
-    const context = this.context || "";
+    const context = this.context || '';
     const event = EVENTS.SET.SETTINGS;
 
-    this.settings = payload;
+    console.warn('SAVE SETTINGS', payload);
 
     this.send({
       event,
       context,
-      payload
+      payload,
     });
   }
 
@@ -60,13 +63,13 @@ export default class {
 
     const payload = {
       title,
-      target
+      target,
     };
 
     this.send({
       event,
       context,
-      payload
+      payload,
     });
   }
 
@@ -86,7 +89,7 @@ export default class {
 
     this.send({
       event,
-      payload
+      payload,
     });
   }
 
@@ -96,7 +99,7 @@ export default class {
 
     this.send({
       event,
-      payload
+      payload,
     });
   }
 
@@ -130,14 +133,17 @@ export default class {
     }
   }
 
-  // override by the consuming object
-  onPayload(event, payload) {
+  // extended by the consuming object
+  onPayload(event, args) {
     switch (event) {
       case EVENTS.RECEIVE.SETTINGS:
-        getCallback(EVENTS.GET.SETTINGS, payload);
+        getCallback(EVENTS.GET.SETTINGS, args.payload);
+        break;
+      case EVENTS.RECEIVE.GLOBAL_SETTINGS:
+        getCallback(EVENTS.GET.GLOBAL_SETTINGS, args.payload);
         break;
       default:
-        this.emit(event, payload);
+        this.emit(event, args);
     }
   }
 }
