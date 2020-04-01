@@ -82,9 +82,15 @@ class XSpltHandler {
     }
   }
 
-  on(payload, callback) {
-    this.callbacks[payload] = callback;
-    this.send({ event: EVENTS.SUBSCRIPTION, payload });
+  on(event, callback) {
+    const eventExist = this.callbacks.hasOwnProperty(event);
+
+    this.callbacks[event] = callback;
+
+    // this is to minimize subscription calls every re-render
+    if (!eventExist) {
+      this.send({ event: EVENTS.SUBSCRIPTION, payload: event });
+    }
   }
 }
 

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect } from 'react';
 
 import handler from 'handlers/PropertyInspector';
 import XSplit from 'handlers/XSplit';
@@ -13,49 +13,38 @@ const { SUBSCRIPTION_EVENTS: SUBSCRIPTION } = EVENTS.XSPLIT;
 const getScene = (scenes, id) => {
   const scene = scenes.find(scene => scene.id === id);
 
-  return scene || Object.values(scenes).shift();
+  return scene || scenes[0];
 };
 
-const updateSettings = scene => {
-  handler.setSettings(scene);
-
-  handler.setTitle(scene.name);
-};
-
-export default () => {
-  const [scenesList, setScenesList] = useState([]);
-  const [selectedScene, setSelectedScene] = useState('');
-
+export default ({ model: { state, setScene, setList } }) => {
   const onChange = useCallback(
-    ({ target }) => {
-      const scene = getScene(scenesList, target.value);
+    async ({ target }) => {
+      const scene = getScene(state.list, target.value);
 
-      setSelectedScene(scene.id);
-      updateSettings(scene);
+      await setScene(scene);
     },
-    [scenesList],
+    [state.list, setScene],
   );
 
   useEffect(() => {
     // specify the manifest plugin action
     handler.setAction(ACTIONS.SCENE);
 
-    XSplit.getAllScenes().then((scenesList = []) => {
-      setScenesList(scenesList);
-      handler.getSettings().then(({ settings: { id } }) => {
-        setSelectedScene(id);
+    XSplit.getAllScenes().then(async (scenesList = []) => {
+      await setList(scenesList);
+      handler.getSettings().then(async ({ settings: { id } }) => {
         const scene = getScene(scenesList, id);
 
-        scene && updateSettings(scene);
+        await setScene(scene);
       });
     });
 
-    XSplit.on(SUBSCRIPTION.SCENES_LIST, payload => setScenesList(payload));
+    XSplit.on(SUBSCRIPTION.SCENES_LIST, payload => setList(payload));
   }, []);
 
   return (
-    <Select value={selectedScene} onChange={onChange} label="Scene">
-      {scenesList.map(({ id, name }) => (
+    <Select value={state.id} onChange={onChange} label="Scene">
+      {state.list.map(({ id, name }) => (
         <Select.Option key={id} value={id}>
           {name}
         </Select.Option>

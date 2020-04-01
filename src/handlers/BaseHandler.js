@@ -48,8 +48,6 @@ export default class {
     const context = this.context || '';
     const event = EVENTS.SET.SETTINGS;
 
-    console.warn('SAVE SETTINGS', payload);
-
     this.send({
       event,
       context,

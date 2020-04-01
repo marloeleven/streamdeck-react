@@ -43,8 +43,14 @@ export default () => {
   useXSplit(setIsConnected);
 
   useEffect(() => {
-    SDConnect(Plugin).then(() => {
-      Plugin.on(EVENTS.PLUGIN.KEY_DOWN, ({ action, context, payload: { settings } }) =>
+    SDConnect(Plugin);
+  }, []);
+
+  useEffect(() => {
+    if (isConnected) {
+      console.warn('Plugin RTC Connected');
+
+      Plugin.on(EVENTS.PLUGIN.KEY_UP, ({ action, context, payload: { settings } }) =>
         handleEvent({ action, context, settings }),
       );
 
@@ -64,12 +70,7 @@ export default () => {
           return;
         }
       });
-    });
-  }, []);
 
-  useEffect(() => {
-    if (isConnected) {
-      console.warn('Plugin RTC Connected');
       XSplit.getActiveScene().then(({ id }) => toggleSceneState(id));
 
       XSplit.on(SUBSCRIPTION.SCENE_CHANGE, ({ id }) => toggleSceneState(id));

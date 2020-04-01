@@ -53,6 +53,7 @@ const EVENTS = {
       SCENE_CHANGE: 'scenechange',
       SCENES_LIST: 'sceneslist',
       SOURCE_VISIBILIY: 'sourcevisibility',
+      SOURCE_COUNT: 'sourcecount',
       OUTPUTS_LIST: 'outputslist',
     },
   },

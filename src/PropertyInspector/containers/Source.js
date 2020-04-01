@@ -1,5 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import produce from 'immer';
+import React, { useCallback, useEffect } from 'react';
 
 import handler from 'handlers/PropertyInspector';
 import XSplit from 'handlers/XSplit';
@@ -14,148 +13,104 @@ const { SUBSCRIPTION_EVENTS: SUBSCRIPTION } = EVENTS.XSPLIT;
 const getListValue = (list, id) => {
   const value = list.find(item => item.id === id);
 
-  return value || Object.values(list).shift();
+  return value || list[0] || { id: '' };
 };
 
-export default () => {
-  const [list, setList] = useState({
-    scene: [],
-    source: [],
-  });
-  const [selected, setSelected] = useState({
-    scene: '',
-    source: '',
-  });
-
+export default ({ model: { state, setSceneId, setScenesList, setSourceId, setSourceList } }) => {
   const getSceneSource = useCallback(
-    sceneId => {
+    async sceneId => {
       if (sceneId) {
-        XSplit.getSceneSources(sceneId).then((sourceList = []) => {
-          setList(
-            produce(draft => {
-              draft.source = sourceList;
-            }),
-          );
+        XSplit.getSceneSources(sceneId).then(async (sourceList = []) => {
+          await setSourceList(sourceList);
 
-          const source = getListValue(sourceList, selected.source);
+          const source = getListValue(sourceList, state.sourceId);
 
-          setSelected(
-            produce(draft => {
-              draft.source = source.id;
-            }),
-          );
-
-          handler.setSettings({ scene: sceneId, source: source.id });
+          setSourceId(source.id);
         });
         return;
       }
 
       // empty the source
-      setList(
-        produce(draft => {
-          draft.source = [];
-        }),
-      );
+      await setSourceList([]);
+
+      await setSourceId('');
     },
-    [selected.source],
+    [setSourceId, setSourceList, state.sourceId],
   );
 
   const onSceneChange = useCallback(
-    ({ target }) => {
-      const scene = getListValue(list.scene, target.value);
+    async ({ target }) => {
+      const scene = getListValue(state.scenesList, target.value);
 
-      setSelected(
-        produce(draft => {
-          draft.scene = scene.id;
-        }),
-      );
+      await setSceneId(scene.id);
+      await setSourceId('');
 
       getSceneSource(scene.id);
-
-      handler.setSettings({ ...selected, scene: scene.id });
     },
-    [list.scene, selected, getSceneSource],
+    [setSceneId, setSourceId, state.scenesList, getSceneSource],
   );
 
   const onSourceChange = useCallback(
     ({ target }) => {
-      const source = getListValue(list.source, target.value);
+      const source = getListValue(state.sourceList, target.value);
 
-      setSelected(
-        produce(draft => {
-          draft.source = source.id;
-        }),
-      );
-
-      handler.setSettings({ ...selected, source: source.id });
+      setSourceId(source.id);
     },
-    [list.source, selected],
+    [setSourceId, state.sourceList],
   );
 
   // 3. get source list base from scene id
   useEffect(() => {
     // filter initial value
-    if (selected.scene) {
-      getSceneSource(selected.scene);
+    if (state.sceneId) {
+      getSceneSource(state.sceneId);
     }
-  }, [selected.scene, getSceneSource]);
+  }, [state.sceneId, getSceneSource]);
+
+  // subscription to source items count
+  useEffect(() => {
+    XSplit.on(SUBSCRIPTION.SOURCE_COUNT, ({ sceneId, count }) => {
+      if (sceneId === state.sceneId && state.sourceList.length !== count) {
+        getSceneSource(sceneId);
+      }
+    });
+  }, [state.sceneId, state.sourceList, getSceneSource]);
 
   useEffect(() => {
     // specify the manifest plugin action
     handler.setAction(ACTIONS.SOURCE);
 
     // 1. load settings
-    handler.getSettings().then(({ settings: { scene, source } }) => {
-      setSelected({ scene, source });
-
+    handler.getSettings().then(async ({ settings: { sceneId, sourceId } }) => {
       // 2. get all scenes and select the saved id else select first
-      XSplit.getAllScenes().then((scenesList = []) => {
-        setList(
-          produce(draft => {
-            draft.scene = scenesList;
-          }),
-        );
+      XSplit.getAllScenes().then(async (scenesList = []) => {
+        await setScenesList(scenesList);
 
-        const { id } = getListValue(scenesList, scene);
+        const { id } = getListValue(scenesList, sceneId);
 
-        setSelected(
-          produce(draft => {
-            draft.scene = id;
-          }),
-        );
+        await setSceneId(id);
+        await setSourceId(sourceId);
       });
     });
 
     // updates scenes list
     // will automatically trigger source list update when
     // selected scene is deleted
-    XSplit.on(SUBSCRIPTION.SCENES_LIST, payload =>
-      setList(
-        produce(draft => {
-          draft.scene = payload;
-        }),
-      ),
-    );
-
-    // count number of sources in extension and emit on change
-    XSplit.on(SUBSCRIPTION.SOURCE_VISIBILIY, ({ sceneId, sourceId, state }) => {
-      // @TODO
-      // if sceneId === selected.scene -> getSceneSources(selecte.scene)
-    });
+    XSplit.on(SUBSCRIPTION.SCENES_LIST, payload => setScenesList(payload));
   }, []);
 
   return (
     <>
-      <Select value={selected.scene} onChange={onSceneChange} label="Scene">
-        {list.scene.map(({ id, name }) => (
+      <Select value={state.sceneId} onChange={onSceneChange} label="Scene">
+        {state.scenesList.map(({ id, name }) => (
           <Select.Option key={id} value={id}>
             {name}
           </Select.Option>
         ))}
       </Select>
 
-      <Select value={selected.source} onChange={onSourceChange} label="Source">
-        {list.source.map(({ id, name }) => (
+      <Select value={state.sourceId} onChange={onSourceChange} label="Source">
+        {state.sourceList.map(({ id, name }) => (
           <Select.Option key={id} value={id}>
             {name}
           </Select.Option>

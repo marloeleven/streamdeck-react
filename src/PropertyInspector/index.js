@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Provider, Subscribe, Container } from 'unstated';
 
 import Input, { RadioWrapper } from 'components/Input';
 import Wrapper from 'components/Wrapper';
@@ -17,12 +18,15 @@ import { SDConnect } from 'utils/connect';
 
 import XSplit from 'handlers/XSplit';
 
+import SceneModel from 'PropertyInspector/model/Scene';
+import SourceModel from 'PropertyInspector/model/Source';
+
 const renderComponent = type => {
   switch (type) {
     case COMPONENTS.SCENE:
-      return <Scene />;
+      return <Subscribe to={[SceneModel]}>{model => <Scene model={model} />}</Subscribe>;
     case COMPONENTS.SOURCE:
-      return <Source />;
+      return <Subscribe to={[SourceModel]}>{source => <Source model={source} />}</Subscribe>;
     // case COMPONENTS.OUTPUTS:
     //   return <Output />;
     case 'radio':
@@ -44,6 +48,7 @@ const renderComponent = type => {
 
 window.XSplit = XSplit;
 window.PropertyInspector = PropertyInspector;
+
 export default () => {
   const [isConnected, setIsConnected] = useState(false);
   const [componentType, setComponentType] = useState(COMPONENTS.SCENE);
@@ -58,10 +63,9 @@ export default () => {
     });
   }, []);
 
-  if (!isConnected) {
-    return null;
-  }
-
-  return <div className="sdpi-wrapper">{renderComponent(componentType)}</div>;
-  // return <div className="sdpi-wrapper">{renderComponent('password')}</div>;
+  return (
+    <Provider>
+      {isConnected ? <div className="sdpi-wrapper">{renderComponent(componentType)}</div> : null}
+    </Provider>
+  );
 };

@@ -48,6 +48,7 @@ class Plugin extends BaseHandler {
     }
 
     switch (event) {
+      case EVENTS.RECEIVE.SETTINGS:
       case EVENTS.PI.WILL_APPEAR:
         ActionsList.add(ActionsList.getList(action), args);
         break;
