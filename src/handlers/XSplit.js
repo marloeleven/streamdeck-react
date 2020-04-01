@@ -39,6 +39,7 @@ class XSpltHandler {
     // overridden on utils/connect/XSplitConnect:23
   }
 
+  /* SCENE */
   getActiveScene() {
     const event = EVENTS.XSPLIT.GET.SCENE.ACTIVE;
 
@@ -62,6 +63,7 @@ class XSpltHandler {
     return createRequest(event);
   }
 
+  /* SOURCE */
   getSceneSources(sceneId) {
     const event = EVENTS.XSPLIT.GET.SOURCE.ALL;
     this.send({ event, payload: { sceneId } });
@@ -69,8 +71,17 @@ class XSpltHandler {
     return createRequest(event);
   }
 
+  // not used, replaced by toggleSourceState
   setSourceState(payload) {
     const event = EVENTS.XSPLIT.SET.SOURCE_STATE;
+
+    this.send({ event, payload });
+
+    return xsplitRequest(event);
+  }
+
+  toggleSourceState(payload) {
+    const event = EVENTS.XSPLIT.TOGGLE.SOURCE_STATE;
 
     this.send({ event, payload });
 
@@ -80,6 +91,22 @@ class XSpltHandler {
   getSourceState(sceneId, sourceId) {
     const event = EVENTS.XSPLIT.GET.SOURCE.STATE;
     this.send({ event, payload: { sceneId, sourceId } });
+
+    return createRequest(event);
+  }
+
+  /* RECORDING */
+  toggleRecordingState() {
+    const event = EVENTS.XSPLIT.TOGGLE.RECORD_STATE;
+
+    this.send({ event, payload: {} });
+
+    return xsplitRequest(event);
+  }
+
+  getRecordingState() {
+    const event = EVENTS.XSPLIT.GET.RECORDING.STATE;
+    this.send({ event, payload: {} });
 
     return createRequest(event);
   }

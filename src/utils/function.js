@@ -8,8 +8,11 @@ export { isString, isObject, isNumber, isFunction };
 export const noop = e => e;
 
 export const parse = stringedJson => {
+  if ([null, undefined].includes(stringedJson)) {
+    return {};
+  }
+
   if (isObject(stringedJson)) {
-    // @ts-ignore
     return stringedJson;
   }
 
@@ -18,9 +21,9 @@ export const parse = stringedJson => {
       return JSON.parse(stringedJson);
     }
 
-    throw Error(`value not a String. ${toString(stringedJson)}`);
+    throw new Error(`value not a String. ${toString(stringedJson)}`);
   } catch (e) {
-    throw Error(e);
+    throw new Error(e);
   }
 };
 
@@ -32,6 +35,6 @@ export const toString = jsonObject => {
   try {
     return JSON.stringify(jsonObject);
   } catch (e) {
-    throw Error('Unknown object type', jsonObject);
+    throw new Error('Unknown object type', jsonObject);
   }
 };

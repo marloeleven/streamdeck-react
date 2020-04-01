@@ -9,7 +9,7 @@ import { SDConnect } from 'utils/connect';
 
 import useXSplit from 'hooks/useXSplit';
 
-import { toggleSceneState, toggleState, toggleSourceState } from './actions';
+import { toggleSceneState, toggleState, toggleSourceState, toggleRecordingState } from './actions';
 
 const { SUBSCRIPTION_EVENTS: SUBSCRIPTION } = EVENTS.XSPLIT;
 
@@ -19,19 +19,16 @@ window.XSplit = XSplit;
 window.ActionsList = ActionsList;
 
 const handleEvent = ({ action, context, settings }) => {
+  const showAlert = () => Plugin.showAlert({ context });
   switch (action) {
     case ACTIONS.SCENE:
-      XSplit.setActiveScene(settings).catch(() => {
-        Plugin.showAlert({ context });
-      });
+      XSplit.setActiveScene(settings).catch(showAlert);
       break;
     case ACTIONS.SOURCE:
-      // @TODO validate
-      XSplit.getSourceState(settings.sceneId, settings.sourceId).then(({ state }) => {
-        XSplit.setSourceState({ ...settings, state: (Number(state) + 1) % 2 }).catch(() => {
-          Plugin.showAlert({ context });
-        });
-      });
+      XSplit.toggleSourceState(settings).catch(showAlert);
+      break;
+    case ACTIONS.RECORD:
+      XSplit.toggleRecordingState().catch(showAlert);
       break;
     default:
       // none
@@ -79,6 +76,9 @@ export default () => {
       XSplit.on(SUBSCRIPTION.SOURCE_VISIBILIY, ({ sceneId, sourceId, state }) =>
         toggleSourceState(sceneId, sourceId, state),
       );
+      XSplit.on(SUBSCRIPTION.RECORDING_STATE, ({ state }) => {
+        toggleRecordingState(state);
+      });
     }
   }, [isConnected]);
 

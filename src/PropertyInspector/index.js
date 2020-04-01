@@ -29,6 +29,8 @@ const renderComponent = type => {
       return <Subscribe to={[SourceModel]}>{source => <Source model={source} />}</Subscribe>;
     // case COMPONENTS.OUTPUTS:
     //   return <Output />;
+    case COMPONENTS.RECORD:
+      return null;
     case 'radio':
       return (
         <Wrapper.Radio label="Test">

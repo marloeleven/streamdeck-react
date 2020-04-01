@@ -40,11 +40,18 @@ const EVENTS = {
         ALL: 'getSceneSources',
         STATE: 'getSourceState',
       },
+      RECORDING: {
+        STATE: 'getRecordingState',
+      },
       OUTPUTS: 'getAllOutputs',
     },
     SET: {
       SOURCE_STATE: 'setSourceState',
       ACTIVE_SCENE: 'setActiveScene',
+    },
+    TOGGLE: {
+      SOURCE_STATE: 'toggleSourceState',
+      RECORD_STATE: 'toggleRecordingState',
     },
     RECEIVE: {
       SCENES: 'scenesList',
@@ -55,6 +62,7 @@ const EVENTS = {
       SOURCE_VISIBILIY: 'sourcevisibility',
       SOURCE_COUNT: 'sourcecount',
       OUTPUTS_LIST: 'outputslist',
+      RECORDING_STATE: 'recordingstate',
     },
   },
   OPEN_URL: 'openUrl',

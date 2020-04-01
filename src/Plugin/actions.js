@@ -19,11 +19,17 @@ export const toggleSceneState = id => {
 };
 
 /* SOURCE */
-
 export const toggleSourceState = (sceneId, sourceId, state) => {
   loopThroughList(ACTIONS.SOURCE, (settings, context) => {
     if (sceneId === settings.sceneId && sourceId === settings.sourceId) {
       toggleState({ context, state });
     }
+  });
+};
+
+/* RECORD */
+export const toggleRecordingState = state => {
+  loopThroughList(ACTIONS.RECORD, (settings, context) => {
+    toggleState({ context, state });
   });
 };
