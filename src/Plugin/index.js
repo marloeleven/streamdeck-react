@@ -27,8 +27,10 @@ const handleEvent = ({ action, context, settings }) => {
       break;
     case ACTIONS.SOURCE:
       // @TODO validate
-      XSplit.setSourceState({ ...settings, state: (Number(settings.state) + 1) % 2 }).catch(() => {
-        Plugin.showAlert({ context });
+      XSplit.getSourceState(settings.sceneId, settings.sourceId).then(({ state }) => {
+        XSplit.setSourceState({ ...settings, state: (Number(state) + 1) % 2 }).catch(() => {
+          Plugin.showAlert({ context });
+        });
       });
       break;
     default:

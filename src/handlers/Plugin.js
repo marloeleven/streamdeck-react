@@ -23,6 +23,7 @@ class Plugin extends BaseHandler {
       context,
     });
   }
+
   // show an Alert Image to Action Instance
   showAlert({ context }) {
     this.send({

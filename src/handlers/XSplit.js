@@ -69,6 +69,14 @@ class XSpltHandler {
     return createRequest(event);
   }
 
+  setSourceState(payload) {
+    const event = EVENTS.XSPLIT.SET.SOURCE_STATE;
+
+    this.send({ event, payload });
+
+    return xsplitRequest(event);
+  }
+
   getSourceState(sceneId, sourceId) {
     const event = EVENTS.XSPLIT.GET.SOURCE.STATE;
     this.send({ event, payload: { sceneId, sourceId } });

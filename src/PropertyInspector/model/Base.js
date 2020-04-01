@@ -6,7 +6,6 @@ import handler from 'handlers/PropertyInspector';
 
 const throttledSave = throttle(
   settings => {
-    console.warn('SAVE', settings);
     handler.setSettings(settings);
   },
   250,

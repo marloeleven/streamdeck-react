@@ -1,6 +1,6 @@
 import connect from 'streamdeck-xsplit-connect';
 import XSplitHandler from 'handlers/XSplit';
-import { toString } from 'utils/function';
+import { toString, parse } from 'utils/function';
 import { Subject, of } from 'rxjs';
 import { delay } from 'rxjs/operators';
 
@@ -9,7 +9,7 @@ export const connectionState$ = new Subject(false);
 const connectToXSplit = () => {
   const onMessage = ({ data }) => {
     try {
-      const { event, payload } = JSON.parse(data);
+      const { event, payload } = parse(data);
       console.warn({ event, payload });
 
       XSplitHandler.onPayload(event, payload);

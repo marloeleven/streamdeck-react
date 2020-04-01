@@ -1,17 +1,26 @@
-import { FUNCTION, NUMBER, STRING, OBJECT } from 'const/utils';
+import isString from 'lodash/fp/isString';
+import isObject from 'lodash/fp/isObject';
+import isNumber from 'lodash/fp/isNumber';
+import isFunction from 'lodash/fp/isFunction';
 
-export const isString = e => typeof e === STRING;
-export const isNumber = e => typeof e === NUMBER;
-export const isFunction = e => typeof e === FUNCTION;
-export const isObject = e => typeof e === OBJECT;
+export { isString, isObject, isNumber, isFunction };
 
 export const noop = e => e;
 
-export const parse = string => {
+export const parse = stringedJson => {
+  if (isObject(stringedJson)) {
+    // @ts-ignore
+    return stringedJson;
+  }
+
   try {
-    return JSON.parse(string);
+    if (isString(stringedJson)) {
+      return JSON.parse(stringedJson);
+    }
+
+    throw Error(`value not a String. ${toString(stringedJson)}`);
   } catch (e) {
-    return string;
+    throw Error(e);
   }
 };
 
