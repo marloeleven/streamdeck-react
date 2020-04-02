@@ -30,6 +30,9 @@ const renderComponent = type => {
     // case COMPONENTS.OUTPUTS:
     //   return <Output />;
     case COMPONENTS.RECORD:
+    case COMPONENTS.SCREENSHOT:
+    case COMPONENTS.MICRPHONE:
+    case COMPONENTS.SPEAKER:
       return null;
     case 'radio':
       return (

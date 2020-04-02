@@ -38,3 +38,8 @@ export const toString = jsonObject => {
     throw new Error('Unknown object type', jsonObject);
   }
 };
+
+export const asyncIterator = (array, callback) =>
+  array.reduce((promise, value, index) => {
+    return promise.then(result => callback(value, index, result));
+  }, Promise.resolve());

@@ -1,24 +1,24 @@
 import { useEffect, useState } from 'react';
 import Plugin from 'handlers/Plugin';
 import XSplit from 'handlers/XSplit';
-import ActionsList, { ACTIONS } from 'handlers/ActionsListHandler';
+import ActionsList from 'handlers/ActionsListHandler';
 
 import EVENTS from 'const/events';
+import ACTIONS from 'const/actions';
 
 import { SDConnect } from 'utils/connect';
 
 import useXSplit from 'hooks/useXSplit';
 
-import { toggleSceneState, toggleState, toggleSourceState, toggleRecordingState } from './actions';
-
-const { SUBSCRIPTION_EVENTS: SUBSCRIPTION } = EVENTS.XSPLIT;
+import { toggleMicrophoneState, toggleSpeakerState } from './actions';
+import stateHandler from './state';
 
 // @DEBUG
 window.Plugin = Plugin;
 window.XSplit = XSplit;
 window.ActionsList = ActionsList;
 
-const handleEvent = ({ action, context, settings }) => {
+const handleKeyUp = ({ action, context, settings }) => {
   const showAlert = () => Plugin.showAlert({ context });
   switch (action) {
     case ACTIONS.SCENE:
@@ -29,6 +29,19 @@ const handleEvent = ({ action, context, settings }) => {
       break;
     case ACTIONS.RECORD:
       XSplit.toggleRecordingState().catch(showAlert);
+      break;
+    case ACTIONS.SCREENSHOT:
+      XSplit.doScreenshot().catch(showAlert);
+      break;
+    case ACTIONS.MICRPHONE:
+      XSplit.toggleMicrophoneState()
+        .then(({ state }) => toggleMicrophoneState(state))
+        .catch(showAlert);
+      break;
+    case ACTIONS.SPEAKER:
+      XSplit.toggleSpeakerState()
+        .then(({ state }) => toggleSpeakerState(state))
+        .catch(showAlert);
       break;
     default:
       // none
@@ -42,43 +55,17 @@ export default () => {
   useXSplit(setIsConnected);
 
   useEffect(() => {
-    SDConnect(Plugin);
+    SDConnect(Plugin).then(() => {
+      Plugin.on(EVENTS.PLUGIN.KEY_UP, ({ action, context, payload: { settings } }) =>
+        handleKeyUp({ action, context, settings }),
+      );
+    });
   }, []);
 
   useEffect(() => {
     if (isConnected) {
       console.warn('Plugin RTC Connected');
-
-      Plugin.on(EVENTS.PLUGIN.KEY_UP, ({ action, context, payload: { settings } }) =>
-        handleEvent({ action, context, settings }),
-      );
-
-      Plugin.on(EVENTS.RECEIVE.SETTINGS, ({ action, context, payload: { settings } }) => {
-        if (action === ACTIONS.SCENE) {
-          XSplit.getActiveScene().then(({ id }) => {
-            const state = Number(settings.id === id);
-            toggleState({ context, state });
-          });
-          return;
-        }
-
-        if (action === ACTIONS.SOURCE) {
-          XSplit.getSourceState(settings.sceneId, settings.sourceId).then(({ state }) => {
-            toggleState({ context, state });
-          });
-          return;
-        }
-      });
-
-      XSplit.getActiveScene().then(({ id }) => toggleSceneState(id));
-
-      XSplit.on(SUBSCRIPTION.SCENE_CHANGE, ({ id }) => toggleSceneState(id));
-      XSplit.on(SUBSCRIPTION.SOURCE_VISIBILIY, ({ sceneId, sourceId, state }) =>
-        toggleSourceState(sceneId, sourceId, state),
-      );
-      XSplit.on(SUBSCRIPTION.RECORDING_STATE, ({ state }) => {
-        toggleRecordingState(state);
-      });
+      stateHandler();
     }
   }, [isConnected]);
 

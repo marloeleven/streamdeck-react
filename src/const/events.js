@@ -43,6 +43,12 @@ const EVENTS = {
       RECORDING: {
         STATE: 'getRecordingState',
       },
+      MICROPHONE: {
+        STATE: 'getMicrophoneState',
+      },
+      SPEAKER: {
+        STATE: 'getSpeakerState',
+      },
       OUTPUTS: 'getAllOutputs',
     },
     SET: {
@@ -52,6 +58,11 @@ const EVENTS = {
     TOGGLE: {
       SOURCE_STATE: 'toggleSourceState',
       RECORD_STATE: 'toggleRecordingState',
+      MICROPHONE_STATE: 'toggleMicrophoneState',
+      SPEAKER_STATE: 'toggleSpeakerState',
+    },
+    DO: {
+      SCREENSHOT: 'doScreenshot',
     },
     RECEIVE: {
       SCENES: 'scenesList',
@@ -63,6 +74,8 @@ const EVENTS = {
       SOURCE_COUNT: 'sourcecount',
       OUTPUTS_LIST: 'outputslist',
       RECORDING_STATE: 'recordingstate',
+      MICROPHONE_STATE: 'microphonestate',
+      SPEAKER_STATE: 'speakerstate',
     },
   },
   OPEN_URL: 'openUrl',

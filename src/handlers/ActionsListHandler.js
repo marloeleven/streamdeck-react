@@ -1,9 +1,4 @@
-export const ACTIONS = {
-  SCENE: 'com.xsplit.streamdeck.scene',
-  SOURCE: 'com.xsplit.streamdeck.source',
-  RECORD: 'com.xsplit.streamdeck.record',
-  OUTPUT: 'com.xsplit.streamdeck.output',
-};
+import ACTIONS from 'const/actions';
 
 class ActionsList {
   constructor() {

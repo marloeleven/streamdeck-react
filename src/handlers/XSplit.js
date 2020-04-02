@@ -1,4 +1,4 @@
-import { createRequest, xsplitRequest, getCallback } from 'handlers/AsyncRequest';
+import { xsplitRequest, getCallback } from 'handlers/AsyncRequest';
 import EVENTS from 'const/events';
 import { parse } from 'utils/function';
 
@@ -9,11 +9,15 @@ class XSpltHandler {
 
   onPayload(event, payload) {
     console.warn('RECEIVED', event, payload);
+
     switch (event) {
       case EVENTS.XSPLIT.SET.ACTIVE_SCENE:
       case EVENTS.XSPLIT.GET.SCENE.ACTIVE:
       case EVENTS.XSPLIT.GET.SCENE.ALL:
       case EVENTS.XSPLIT.GET.SOURCE.STATE:
+      case EVENTS.XSPLIT.DO.SCREENSHOT:
+      case EVENTS.XSPLIT.GET.MICROPHONE.STATE:
+      case EVENTS.XSPLIT.GET.SPEAKER.STATE:
         getCallback(event, payload);
         break;
       case EVENTS.SUBSCRIPTION:
@@ -45,7 +49,7 @@ class XSpltHandler {
 
     this.send({ event });
 
-    return createRequest(event);
+    return xsplitRequest(event);
   }
 
   setActiveScene({ id }) {
@@ -60,7 +64,7 @@ class XSpltHandler {
     const event = EVENTS.XSPLIT.GET.SCENE.ALL;
     this.send({ event });
 
-    return createRequest(event);
+    return xsplitRequest(event);
   }
 
   /* SOURCE */
@@ -68,7 +72,14 @@ class XSpltHandler {
     const event = EVENTS.XSPLIT.GET.SOURCE.ALL;
     this.send({ event, payload: { sceneId } });
 
-    return createRequest(event);
+    return xsplitRequest(event);
+  }
+
+  getSourceState(sceneId, sourceId) {
+    const event = EVENTS.XSPLIT.GET.SOURCE.STATE;
+    this.send({ event, payload: { sceneId, sourceId } });
+
+    return xsplitRequest(event);
   }
 
   // not used, replaced by toggleSourceState
@@ -88,13 +99,6 @@ class XSpltHandler {
     return xsplitRequest(event);
   }
 
-  getSourceState(sceneId, sourceId) {
-    const event = EVENTS.XSPLIT.GET.SOURCE.STATE;
-    this.send({ event, payload: { sceneId, sourceId } });
-
-    return createRequest(event);
-  }
-
   /* RECORDING */
   toggleRecordingState() {
     const event = EVENTS.XSPLIT.TOGGLE.RECORD_STATE;
@@ -108,7 +112,15 @@ class XSpltHandler {
     const event = EVENTS.XSPLIT.GET.RECORDING.STATE;
     this.send({ event, payload: {} });
 
-    return createRequest(event);
+    return xsplitRequest(event);
+  }
+
+  /* SCREENSHOT */
+  doScreenshot() {
+    const event = EVENTS.XSPLIT.DO.SCREENSHOT;
+    this.send({ event, payload: {} });
+
+    return xsplitRequest(event);
   }
 
   _handleSubscription({ event, payload }) {
@@ -117,6 +129,39 @@ class XSpltHandler {
     }
   }
 
+  /* MICROPHONE */
+  toggleMicrophoneState() {
+    const event = EVENTS.XSPLIT.TOGGLE.MICROPHONE_STATE;
+
+    this.send({ event, payload: {} });
+
+    return xsplitRequest(event);
+  }
+
+  getMicrophoneState() {
+    const event = EVENTS.XSPLIT.GET.MICROPHONE.STATE;
+    this.send({ event, payload: {} });
+
+    return xsplitRequest(event);
+  }
+
+  /* SPEAKER */
+  toggleSpeakerState() {
+    const event = EVENTS.XSPLIT.TOGGLE.SPEAKER_STATE;
+
+    this.send({ event, payload: {} });
+
+    return xsplitRequest(event);
+  }
+
+  getSpeakerState() {
+    const event = EVENTS.XSPLIT.GET.SPEAKER.STATE;
+    this.send({ event, payload: {} });
+
+    return xsplitRequest(event);
+  }
+
+  /* SUBSCRIPTION */
   on(event, callback) {
     const eventExist = this.callbacks.hasOwnProperty(event);
 

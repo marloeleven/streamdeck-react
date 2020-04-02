@@ -10,7 +10,6 @@ const connectToXSplit = () => {
   const onMessage = ({ data }) => {
     try {
       const { event, payload } = parse(data);
-      console.warn({ event, payload });
 
       XSplitHandler.onPayload(event, payload);
     } catch (e) {
@@ -37,7 +36,10 @@ const connectToXSplit = () => {
         connectionState$.next(false);
       };
 
-      window.addEventListener('beforeunload', () => channel.close());
+      window.addEventListener('beforeunload', () => {
+        console.warn('TRIGGER DISCONNECT');
+        channel.close();
+      });
     },
     onError: (err, websocket) => {
       console.warn('Error found while establishing connection', err);
