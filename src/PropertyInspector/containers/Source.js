@@ -1,14 +1,11 @@
 import React, { useCallback, useEffect } from 'react';
 
 import handler from 'handlers/PropertyInspector';
-import XSplit from 'handlers/XSplit';
 
 import EVENTS from 'const/events';
 import ACTIONS from 'const/actions';
 
 import Select from 'components/Select';
-
-const { SUBSCRIPTION_EVENTS: SUBSCRIPTION } = EVENTS.XSPLIT;
 
 const getListValue = (list, id) => {
   const value = list.find(item => item.id === id);
@@ -20,22 +17,18 @@ export default ({ model: { state, setSceneId, setScenesList, setSourceId, setSou
   const getSceneSource = useCallback(
     async sceneId => {
       if (sceneId) {
-        XSplit.getSceneSources(sceneId).then(async (sourceList = []) => {
-          await setSourceList(sourceList);
-
-          const source = getListValue(sourceList, state.sourceId);
-
-          setSourceId(source.id);
-        });
+        const sources = await handler.getSceneSources(sceneId);
+        const source = getListValue(sources, '');
+        await setSourceList(sources);
+        setSourceId(source.id);
         return;
       }
 
       // empty the source
       await setSourceList([]);
-
       await setSourceId('');
     },
-    [setSourceId, setSourceList, state.sourceId],
+    [setSourceId, setSourceList],
   );
 
   const onSceneChange = useCallback(
@@ -59,44 +52,34 @@ export default ({ model: { state, setSceneId, setScenesList, setSourceId, setSou
     [setSourceId, state.sourceList],
   );
 
-  // 3. get source list base from scene id
   useEffect(() => {
-    // filter initial value
-    if (state.sceneId) {
-      getSceneSource(state.sceneId);
-    }
-  }, [state.sceneId, getSceneSource]);
+    handler.on(EVENTS.GET.ALL_SCENES, async scenes => {
+      const scene = getListValue(scenes, state.sceneId);
+      const sources = await handler.getSceneSources(scene.id);
+      const source = getListValue(sources, state.sourceId);
 
-  // subscription to source items count
-  useEffect(() => {
-    XSplit.on(SUBSCRIPTION.SOURCE_COUNT, ({ sceneId, count }) => {
-      if (sceneId === state.sceneId && state.sourceList.length !== count) {
-        getSceneSource(sceneId);
-      }
+      await setScenesList(scenes);
+      await setSourceList(sources);
+      await setSceneId(scene.id);
+      await setSourceId(source.id);
     });
-  }, [state.sceneId, state.sourceList, getSceneSource]);
+  }, [state.sceneId, state.sourceId, setScenesList, setSceneId, setSourceId, setSourceList]);
 
   useEffect(() => {
-    // specify the manifest plugin action
     handler.setAction(ACTIONS.SOURCE);
 
-    // 1. load settings
     handler.getSettings().then(async ({ settings: { sceneId, sourceId } }) => {
-      // 2. get all scenes and select the saved id else select first
-      XSplit.getAllScenes().then(async (scenesList = []) => {
-        await setScenesList(scenesList);
+      const scenes = await handler.getAllScenes();
+      const scene = getListValue(scenes, sceneId);
 
-        const { id } = getListValue(scenesList, sceneId);
+      const sources = await handler.getSceneSources(scene.id);
+      const source = getListValue(sources, sourceId);
 
-        await setSceneId(id);
-        await setSourceId(sourceId);
-      });
+      await setScenesList(scenes);
+      await setSourceList(sources);
+      await setSceneId(scene.id);
+      await setSourceId(source.id);
     });
-
-    // updates scenes list
-    // will automatically trigger source list update when
-    // selected scene is deleted
-    XSplit.on(SUBSCRIPTION.SCENES_LIST, payload => setScenesList(payload));
   }, []);
 
   return (

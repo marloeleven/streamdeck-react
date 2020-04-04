@@ -1,24 +1,26 @@
 import { Container } from 'unstated';
 import pick from 'lodash/pick';
-import throttle from 'lodash/throttle';
+import { Subject } from 'rxjs';
+import { throttleTime } from 'rxjs/operators';
 
 import handler from 'handlers/PropertyInspector';
 
-const throttledSave = throttle(
-  settings => {
-    handler.setSettings(settings);
-  },
-  250,
-  {
-    leading: false,
-    trailing: true,
-  },
-);
+const save$ = new Subject();
+
+save$.pipe(throttleTime(250)).subscribe(settings => {
+  console.warn('SAVE ACCEPTED!', settings);
+  handler.setSettings(settings);
+});
+
+const valueNotEmpty = value => value !== '';
 
 export default class extends Container {
   save = () => {
     const settings = pick(this.state, this.persist);
 
-    throttledSave(settings);
+    if (Object.values(settings).every(valueNotEmpty)) {
+      save$.next(settings);
+      return;
+    }
   };
 }

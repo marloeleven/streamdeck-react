@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Provider, Subscribe, Container } from 'unstated';
 
-import Input, { RadioWrapper } from 'components/Input';
+import Input from 'components/Input';
 import Wrapper from 'components/Wrapper';
 
 import COMPONENTS from 'const/components';
@@ -11,8 +11,6 @@ import PropertyInspector from 'handlers/PropertyInspector';
 import Scene from 'containers/Scene';
 import Source from 'containers/Source';
 // import Output from 'containers/Output';
-
-import useXSplit from 'hooks/useXSplit';
 
 import { SDConnect } from 'utils/connect';
 
@@ -58,13 +56,12 @@ export default () => {
   const [isConnected, setIsConnected] = useState(false);
   const [componentType, setComponentType] = useState(COMPONENTS.SCENE);
 
-  useXSplit(setIsConnected);
-
   useEffect(() => {
     SDConnect(PropertyInspector).then(inActionInfo => {
       const { action } = JSON.parse(inActionInfo);
 
       setComponentType(action.split('.').pop());
+      setIsConnected(true);
     });
   }, []);
 

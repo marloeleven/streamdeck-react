@@ -3,7 +3,7 @@ const callbacks = {};
 const ASYNC_TIMEOUT = 5000;
 
 export const getCallback = (eventName, payload) => {
-  if (callbacks.hasOwnProperty(eventName)) {
+  if (isCallbackExist(eventName)) {
     const { callback } = callbacks[eventName];
 
     return callback(payload);
@@ -11,6 +11,8 @@ export const getCallback = (eventName, payload) => {
 
   return false;
 };
+
+export const isCallbackExist = eventName => callbacks.hasOwnProperty(eventName);
 
 export const createRequest = eventName => {
   return new Promise((resolve, reject) => {

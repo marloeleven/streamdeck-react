@@ -1,14 +1,11 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import handler from 'handlers/PropertyInspector';
-import XSplit from 'handlers/XSplit';
 
 import EVENTS from 'const/events';
 import ACTIONS from 'const/actions';
 
 import Select from 'components/Select';
-
-const { SUBSCRIPTION_EVENTS: SUBSCRIPTION } = EVENTS.XSPLIT;
 
 const getScene = (scenes, id) => {
   const scene = scenes.find(scene => scene.id === id);
@@ -27,19 +24,25 @@ export default ({ model: { state, setScene, setList } }) => {
   );
 
   useEffect(() => {
+    handler.on(EVENTS.GET.ALL_SCENES, async ({ scenes }) => {
+      const scene = getScene(scenes, state.id);
+      await setList(scenes);
+      await setScene(scene);
+    });
+  }, [state, setList, setScene]);
+
+  useEffect(() => {
     // specify the manifest plugin action
     handler.setAction(ACTIONS.SCENE);
 
-    XSplit.getAllScenes().then(async (scenesList = []) => {
-      await setList(scenesList);
-      handler.getSettings().then(async ({ settings: { id } }) => {
-        const scene = getScene(scenesList, id);
+    handler.getSettings().then(async ({ settings: { id } }) => {
+      const { scenes } = await handler.getAllScenes();
 
-        await setScene(scene);
-      });
+      const scene = getScene(scenes, id);
+
+      await setList(scenes);
+      await setScene(scene);
     });
-
-    XSplit.on(SUBSCRIPTION.SCENES_LIST, payload => setList(payload));
   }, []);
 
   return (

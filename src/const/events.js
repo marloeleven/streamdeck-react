@@ -1,9 +1,20 @@
 const EVENTS = {
   SUBSCRIPTION: 'SUBSCRIPTION',
   ACTIVATE: 'ACTIVATE',
+  TO: {
+    PLUGIN: 'sendToPlugin',
+    PROPERTY_INSPECTOR: 'sendToPropertyInspector',
+  },
+  FROM: {
+    PLUGIN: 'sendToPropertyInspector',
+    PROPERTY_INSPECTOR: 'sendToPlugin',
+  },
   GET: {
     SETTINGS: 'getSettings',
     GLOBAL_SETTINGS: 'getGlobalSettings',
+    // handler events
+    ALL_SCENES: 'getAllScenes',
+    SCENE_SOURCES: 'getSceneSources',
   },
   SET: {
     SETTINGS: 'setSettings',
@@ -22,11 +33,13 @@ const EVENTS = {
     INIT: 'INIT',
     SEND: 'sendToPropertyInspector',
     APPEAR: 'propertyInspectorDidAppear',
+    DISAPPEAR: 'propertyInspectorDidDisappear',
     WILL_APPEAR: 'willAppear',
     WILL_DISAPPEAR: 'willDisappear',
   },
   PLUGIN: {
     SEND: 'sendToPlugin',
+    RECEIVE_FROM_PI: 'sendToPlugin',
     KEY_UP: 'keyUp',
     KEY_DOWN: 'keyDown',
   },

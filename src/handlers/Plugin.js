@@ -33,8 +33,9 @@ class Plugin extends BaseHandler {
   }
 
   onPayload(args) {
-    const { event, context, action, payload } = args;
+    const { event, action } = args;
 
+    /*
     if (event === EVENTS.PI.SEND) {
       this.send({
         event: payload.event,
@@ -43,8 +44,16 @@ class Plugin extends BaseHandler {
       });
       return;
     }
+    */
 
-    if ([EVENTS.RECEIVE.SETTINGS, EVENTS.RECEIVE.GLOBAL_SETTINGS].includes(event)) {
+    if (
+      [
+        EVENTS.PI.WILL_APPEAR,
+        EVENTS.PI.WILL_DISAPPEAR,
+        EVENTS.RECEIVE.SETTINGS,
+        EVENTS.RECEIVE.GLOBAL_SETTINGS,
+      ].includes(event)
+    ) {
       this.emit(event, args);
     }
 
@@ -70,6 +79,22 @@ class Plugin extends BaseHandler {
     }
 
     this.onPayload(jsonData);
+  }
+
+  sendToPropertyInspector({ action, context, payload }) {
+    console.warn({
+      context,
+      action,
+      event: EVENTS.TO.PROPERTY_INSPECTOR,
+      payload,
+    });
+
+    this.send({
+      context,
+      action,
+      event: EVENTS.TO.PROPERTY_INSPECTOR,
+      payload,
+    });
   }
 }
 

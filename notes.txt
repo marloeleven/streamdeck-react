@@ -64,3 +64,9 @@ LEFT
 // verify working connection
 
 // poll for connection on disconnect
+
+// FIND A WAY TO
+on initialize,
+ opened PI will not received initial data
+
+- track opened PI, and send appropriate data on RTC connection
