@@ -37,7 +37,7 @@ export const handleKeyUp = ({ action, context, payload: { settings } }) => {
 
 export const toggleState = ({ context, state }) => Plugin.setState({ context, state });
 
-export const getList = action => Object.values(ActionsList.getList(action));
+export const getList = (action) => Object.values(ActionsList.getList(action));
 
 export const getActionContext = (action, context) => {
   if (ActionsList.list.hasOwnProperty(action)) {
@@ -53,7 +53,7 @@ const loopThroughList = (action, callback) => {
   getList(action).forEach(({ payload: { settings }, context }) => callback(settings, context));
 };
 
-const wrapAsyncCallback = callback => new Promise(resolve => callback().then(resolve));
+const wrapAsyncCallback = (callback) => new Promise((resolve) => callback().then(resolve));
 
 const asyncLoopThroughList = async (action, callback) => {
   const list = getList(action);
@@ -69,14 +69,14 @@ const asyncLoopThroughList = async (action, callback) => {
 };
 
 /* SCENE */
-export const toggleSceneState = id => {
+export const toggleSceneState = (id) => {
   loopThroughList(ACTIONS.SCENE, (settings, context) => {
     const state = Number(id === settings.id);
     toggleState({ context, state });
   });
 };
 
-export const sendToPiScenesList = scenes => {
+export const sendToPiScenesList = (scenes) => {
   loopThroughList(ACTIONS.SCENE, (settings, context) => {
     if (State.isActivePi(ACTIONS.SCENE, context)) {
       Plugin.sendToPropertyInspector({
@@ -108,16 +108,14 @@ export const toggleSourceState = (sceneId, sourceId, state) => {
   });
 };
 
-// @TODO
-export const sendToPiSourceList = (scenes, sources) => {
+export const sendToPiSourceList = (sceneId, sources) => {
   loopThroughList(ACTIONS.SOURCE, (settings, context) => {
-    if (State.isActivePi(ACTIONS.SOURCE, context)) {
+    if (State.isActivePi(ACTIONS.SOURCE, context) && sceneId === settings.sceneId) {
       Plugin.sendToPropertyInspector({
         action: ACTIONS.SOURCE,
         context,
         payload: {
-          event: EVENTS.PI.RECEIVE.SOURCE,
-          scenes,
+          event: EVENTS.GET.SCENE_SOURCES,
           sources,
         },
       });
@@ -125,22 +123,39 @@ export const sendToPiSourceList = (scenes, sources) => {
   });
 };
 
+/* PRESETS */
+
+export const sendToPiPresetsList = (sceneId, presets) => {
+  loopThroughList(ACTIONS.PRESET, (settings, context) => {
+    if (State.isActivePi(ACTIONS.PRESET, context) && sceneId === settings.sceneId) {
+      Plugin.sendToPropertyInspector({
+        action: ACTIONS.PRESET,
+        context,
+        payload: {
+          event: EVENTS.GET.SCENE_PRESETS,
+          presets,
+        },
+      });
+    }
+  });
+};
+
 /* RECORD */
-export const toggleRecordingState = state => {
+export const toggleRecordingState = (state) => {
   loopThroughList(ACTIONS.RECORD, (settings, context) => {
     toggleState({ context, state });
   });
 };
 
 /* MICROPHONE */
-export const toggleMicrophoneState = state => {
+export const toggleMicrophoneState = (state) => {
   loopThroughList(ACTIONS.MICRPHONE, (settings, context) => {
     toggleState({ context, state });
   });
 };
 
 /* SPEAKER */
-export const toggleSpeakerState = state => {
+export const toggleSpeakerState = (state) => {
   loopThroughList(ACTIONS.SPEAKER, (settings, context) => {
     toggleState({ context, state });
   });

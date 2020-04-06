@@ -13,6 +13,7 @@ import {
   // send to opened pi
   sendToPiScenesList,
   sendToPiSourceList,
+  sendToPiPresetsList,
 
   // state toggling
   toggleSceneState,
@@ -24,7 +25,7 @@ import {
   toggleSpeakerState,
 } from './actions';
 
-import { getScenesList, getSceneSources } from './helper';
+import { getScenesList, getSceneSources, getScenePresets } from './helper';
 
 const { SUBSCRIPTION_EVENTS: SUBSCRIPTION } = EVENTS.XSPLIT;
 
@@ -43,25 +44,34 @@ const getState = async () => {
 const getAllList = async () =>
   await XSplit.getAllScenes().then(async (scenesList = []) => {
     for (const sceneItem of scenesList) {
-      await State.addScene(sceneItem).then(scene =>
-        XSplit.getSceneSources(scene.id).then(sources => scene.addSources(sources)),
+      await State.addScene(sceneItem).then((scene) =>
+        XSplit.getSceneSources(scene.id).then((sources) => scene.addSources(sources)),
       );
     }
   });
 
 // SUBSCRIBE TO XSPLIT EVENTS
 const onXSplitEvents = () => {
-  XSplit.on(SUBSCRIPTION.SCENES_LIST, async payload => {
+  console.log('TRIGGER XSPLIT SUBSCRIPTIOM');
+  XSplit.on(SUBSCRIPTION.SCENES_LIST, async (payload) => {
     await State.updateList(payload);
 
     sendToPiScenesList(getScenesList());
   });
 
   XSplit.on(SUBSCRIPTION.SOURCE_COUNT, ({ sceneId, count }) => {
-    State.getScene(sceneId).then(async scene => {
-      await XSplit.getSceneSources(sceneId).then(sources => scene.addSources(sources));
+    State.getScene(sceneId).then(async (scene) => {
+      await XSplit.getSceneSources(sceneId).then((sources) => scene.addSources(sources));
 
-      sendToPiSourceList(getScenesList(), getSceneSources(sceneId));
+      sendToPiSourceList(sceneId, await getSceneSources(sceneId));
+    });
+  });
+
+  XSplit.on(SUBSCRIPTION.PRESET_LIST, ({ sceneId, presets }) => {
+    State.getScene(sceneId).then(async (scene) => {
+      scene.setPresets(presets);
+
+      sendToPiPresetsList(sceneId, await getScenePresets(sceneId));
     });
   });
 
@@ -72,6 +82,7 @@ const onXSplitEvents = () => {
   );
 
   XSplit.on(SUBSCRIPTION.RECORDING_STATE, ({ state }) => {
+    console.warn('RECORDING');
     toggleRecordingState(state);
   });
 
@@ -96,9 +107,13 @@ const onSettingsChange = () => {
     }
 
     if (action === ACTIONS.SOURCE) {
-      XSplit.getSourceState(settings.sceneId, settings.sourceId).then(({ state }) => {
-        toggleState({ context, state });
-      });
+      if (settings.sourceId) {
+        XSplit.getSourceState(settings.sceneId, settings.sourceId).then(({ state }) => {
+          toggleState({ context, state });
+        });
+        return;
+      }
+      toggleState({ context, state: 0 });
       return;
     }
   });
@@ -119,7 +134,7 @@ const onPropInspectorHandler = () => {
 
   Plugin.on(
     EVENTS.FROM.PROPERTY_INSPECTOR,
-    ({ action, context, payload: { event, ...payload } }) => {
+    async ({ action, context, payload: { event, ...payload } }) => {
       console.warn(event, payload);
       switch (event) {
         case EVENTS.GET.ALL_SCENES:
@@ -138,7 +153,7 @@ const onPropInspectorHandler = () => {
             context,
             payload: {
               event,
-              sources: getSceneSources(payload.sceneId),
+              sources: await getSceneSources(payload.sceneId),
             },
           });
           break;

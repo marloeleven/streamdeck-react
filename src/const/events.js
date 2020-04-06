@@ -53,6 +53,10 @@ const EVENTS = {
         ALL: 'getSceneSources',
         STATE: 'getSourceState',
       },
+      PRESET: {
+        ALL: 'getScenePresets',
+        ACTIVE: 'getActivePreset',
+      },
       RECORDING: {
         STATE: 'getRecordingState',
       },
@@ -67,6 +71,7 @@ const EVENTS = {
     SET: {
       SOURCE_STATE: 'setSourceState',
       ACTIVE_SCENE: 'setActiveScene',
+      ACTIVE_PRESET: 'setActivePreset',
     },
     TOGGLE: {
       SOURCE_STATE: 'toggleSourceState',
@@ -85,6 +90,7 @@ const EVENTS = {
       SCENES_LIST: 'sceneslist',
       SOURCE_VISIBILIY: 'sourcevisibility',
       SOURCE_COUNT: 'sourcecount',
+      PRESET_LIST: 'presetlist',
       OUTPUTS_LIST: 'outputslist',
       RECORDING_STATE: 'recordingstate',
       MICROPHONE_STATE: 'microphonestate',

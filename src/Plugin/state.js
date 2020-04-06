@@ -1,7 +1,7 @@
 const updateMap = (oldMap, array, setValue) => {
   const newMap = new Map();
 
-  array.forEach(item => {
+  array.forEach((item) => {
     const { id } = item;
     if (oldMap.has(id)) {
       newMap.set(id, oldMap.get(id));
@@ -24,7 +24,7 @@ class Scene {
 
   //{ id, name }[]
   addSources(sources) {
-    this.sources = updateMap(this.sources, sources, source => source);
+    this.sources = updateMap(this.sources, sources, (source) => source);
 
     return this;
   }
@@ -47,13 +47,13 @@ class Scene {
   }
 
   // id[]
-  addPresets(presets) {
+  setPresets(presets) {
     this.presets = presets;
     return this;
   }
 
   deletePreset(id) {
-    this.presets = this.presets.filter(presetId => presetId !== id);
+    this.presets = this.presets.filter((presetId) => presetId !== id);
 
     return this;
   }
@@ -104,7 +104,7 @@ class State {
 
   // update scenes list
   async updateList(scenes) {
-    this.scenesList = updateMap(this.scenesList, scenes, scene => new Scene(scene));
+    this.scenesList = updateMap(this.scenesList, scenes, (scene) => new Scene(scene));
   }
 }
 
@@ -116,7 +116,7 @@ export default new State();
 
   State.getScene(sceneId).then(scene => {
     scene.addSources(sources);
-    scene.addPresets(presets);
+    scene.setPresets(presets);
   })
 
   // update

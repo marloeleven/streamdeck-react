@@ -11,10 +11,11 @@ export default class extends Base {
   };
 
   persist = ['sceneId', 'sourceId'];
+  required = ['sceneId'];
 
-  setSceneId = async id => {
+  setSceneId = async (id) => {
     await this.setState(
-      produce(draft => {
+      produce((draft) => {
         draft.sceneId = id;
       }),
     );
@@ -22,17 +23,17 @@ export default class extends Base {
     this.save();
   };
 
-  setScenesList = async list => {
+  setScenesList = async (list) => {
     await this.setState(
-      produce(draft => {
+      produce((draft) => {
         draft.scenesList = list;
       }),
     );
   };
 
-  setSourceId = async id => {
+  setSourceId = async (id) => {
     await this.setState(
-      produce(draft => {
+      produce((draft) => {
         draft.sourceId = id;
       }),
     );
@@ -40,9 +41,9 @@ export default class extends Base {
     this.save();
   };
 
-  setSourceList = async list => {
+  setSourceList = async (list) => {
     await this.setState(
-      produce(draft => {
+      produce((draft) => {
         draft.sourceList = list;
       }),
     );

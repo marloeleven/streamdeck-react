@@ -99,6 +99,35 @@ class XSpltHandler {
     return xsplitRequest(event);
   }
 
+  /* PRESET */
+  getScenePresets(sceneId) {
+    const event = EVENTS.XSPLIT.GET.PRESET.ALL;
+    this.send({ event, payload: { sceneId } });
+
+    return xsplitRequest(event);
+  }
+
+  getActivePreset(sceneId) {
+    const event = EVENTS.XSPLIT.GET.PRESET.ACTIVE;
+    this.send({ event, payload: { sceneId } });
+
+    return xsplitRequest(event);
+  }
+
+  setActivePreset(sceneId, presetId) {
+    const event = EVENTS.XSPLIT.SET.ACTIVE_PRESET;
+
+    this.send({
+      event,
+      payload: {
+        sceneId,
+        presetId,
+      },
+    });
+
+    return xsplitRequest(event);
+  }
+
   /* RECORDING */
   toggleRecordingState() {
     const event = EVENTS.XSPLIT.TOGGLE.RECORD_STATE;
@@ -163,14 +192,9 @@ class XSpltHandler {
 
   /* SUBSCRIPTION */
   on(event, callback) {
-    const eventExist = this.callbacks.hasOwnProperty(event);
-
     this.callbacks[event] = callback;
 
-    // this is to minimize subscription calls every re-render
-    if (!eventExist) {
-      this.send({ event: EVENTS.SUBSCRIPTION, payload: event });
-    }
+    this.send({ event: EVENTS.SUBSCRIPTION, payload: event });
   }
 }
 

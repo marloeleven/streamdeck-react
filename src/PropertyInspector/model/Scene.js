@@ -9,18 +9,19 @@ export default class extends Base {
   };
 
   persist = ['id', 'name'];
+  required = ['sceneId'];
 
-  setList = async list => {
+  setList = async (list) => {
     await this.setState(
-      produce(draft => {
+      produce((draft) => {
         draft.list = list;
       }),
     );
   };
 
-  setScene = async scene => {
+  setScene = async (scene) => {
     await this.setState(
-      produce(draft => {
+      produce((draft) => {
         Object.assign(draft, scene);
       }),
     );
