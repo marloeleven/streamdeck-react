@@ -54,9 +54,12 @@ const getAllList = async () =>
 const onXSplitEvents = () => {
   console.log('TRIGGER XSPLIT SUBSCRIPTIOM');
   XSplit.on(SUBSCRIPTION.SCENES_LIST, async (payload) => {
-    await State.updateList(payload);
+    XSplit.getAllScenes().then(async (scenes) => {
+      console.warn('SCENES:', scenes, payload);
+      await State.updateList(scenes);
 
-    sendToPiScenesList(getScenesList());
+      sendToPiScenesList(getScenesList());
+    });
   });
 
   XSplit.on(SUBSCRIPTION.SOURCE_COUNT, ({ sceneId, count }) => {
@@ -81,10 +84,7 @@ const onXSplitEvents = () => {
     toggleSourceState(sceneId, sourceId, state),
   );
 
-  XSplit.on(SUBSCRIPTION.RECORDING_STATE, ({ state }) => {
-    console.warn('RECORDING');
-    toggleRecordingState(state);
-  });
+  XSplit.on(SUBSCRIPTION.RECORDING_STATE, ({ state }) => toggleRecordingState(state));
 
   XSplit.on(SUBSCRIPTION.MICROPHONE_STATE, ({ state }) => {
     toggleMicrophoneState(state);

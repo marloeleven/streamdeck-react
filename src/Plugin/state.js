@@ -4,7 +4,12 @@ const updateMap = (oldMap, array, setValue) => {
   array.forEach((item) => {
     const { id } = item;
     if (oldMap.has(id)) {
-      newMap.set(id, oldMap.get(id));
+      const oldValue = oldMap.get(id);
+      if (oldValue instanceof Scene) {
+        Object.assign(oldValue, item);
+      }
+
+      newMap.set(id, oldValue);
       return;
     }
 
