@@ -65,6 +65,24 @@ class PropertyInspector extends BaseHandler {
     return createRequest(event);
   }
 
+  getScenePresets(sceneId) {
+    const { action, uuid: context } = this;
+
+    const event = EVENTS.GET.SCENE_PRESETS;
+
+    super.send({
+      context,
+      action,
+      event: EVENTS.PLUGIN.SEND,
+      payload: {
+        event,
+        sceneId,
+      },
+    });
+
+    return createRequest(event);
+  }
+
   sendToPlugin(args) {
     const { action, uuid: context } = this;
 

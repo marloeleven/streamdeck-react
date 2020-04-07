@@ -16,10 +16,16 @@ import {
   sendToPiPresetsList,
 
   // state toggling
+
+  // get intial state
+  getSourceState,
+  getPresetState,
+
+  // subscription toggle
   toggleSceneState,
   toggleState,
-  getSourceState,
   toggleSourceState,
+  togglePresetState,
   toggleRecordingState,
   toggleMicrophoneState,
   toggleSpeakerState,
@@ -35,6 +41,8 @@ const getState = async () => {
 
   getSourceState();
 
+  getPresetState();
+
   XSplit.getRecordingState().then(({ state }) => toggleRecordingState(state));
 
   XSplit.getMicrophoneState().then(({ state }) => toggleMicrophoneState(state));
@@ -44,9 +52,10 @@ const getState = async () => {
 const getAllList = async () =>
   await XSplit.getAllScenes().then(async (scenesList = []) => {
     for (const sceneItem of scenesList) {
-      await State.addScene(sceneItem).then((scene) =>
-        XSplit.getSceneSources(scene.id).then((sources) => scene.addSources(sources)),
-      );
+      await State.addScene(sceneItem).then(async (scene) => {
+        await XSplit.getSceneSources(scene.id).then((sources) => scene.setSources(sources));
+        return XSplit.getScenePresets(scene.id).then((presets) => scene.setPresets(presets));
+      });
     }
   });
 
@@ -64,7 +73,7 @@ const onXSplitEvents = () => {
 
   XSplit.on(SUBSCRIPTION.SOURCE_COUNT, ({ sceneId, count }) => {
     State.getScene(sceneId).then(async (scene) => {
-      await XSplit.getSceneSources(sceneId).then((sources) => scene.addSources(sources));
+      await XSplit.getSceneSources(sceneId).then((sources) => scene.setSources(sources));
 
       sendToPiSourceList(sceneId, await getSceneSources(sceneId));
     });
@@ -76,6 +85,10 @@ const onXSplitEvents = () => {
 
       sendToPiPresetsList(sceneId, await getScenePresets(sceneId));
     });
+  });
+
+  XSplit.on(SUBSCRIPTION.PRESET_CHANGE, ({ sceneId, presetId }) => {
+    togglePresetState(sceneId, presetId);
   });
 
   XSplit.on(SUBSCRIPTION.SCENE_CHANGE, ({ id }) => toggleSceneState(id));
@@ -116,6 +129,14 @@ const onSettingsChange = () => {
       toggleState({ context, state: 0 });
       return;
     }
+
+    if (action === ACTIONS.PRESET) {
+      XSplit.getActivePreset(settings.sceneId).then((presetId) => {
+        const state = Number(settings.presetId === presetId);
+        toggleState({ context, state });
+      });
+      return;
+    }
   });
 };
 
@@ -154,6 +175,16 @@ const onPropInspectorHandler = () => {
             payload: {
               event,
               sources: await getSceneSources(payload.sceneId),
+            },
+          });
+          break;
+        case EVENTS.GET.SCENE_PRESETS:
+          Plugin.sendToPropertyInspector({
+            action,
+            context,
+            payload: {
+              event,
+              presets: await getScenePresets(payload.sceneId),
             },
           });
           break;

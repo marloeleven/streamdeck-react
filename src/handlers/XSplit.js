@@ -114,15 +114,12 @@ class XSpltHandler {
     return xsplitRequest(event);
   }
 
-  setActivePreset(sceneId, presetId) {
+  setActivePreset(payload) {
     const event = EVENTS.XSPLIT.SET.ACTIVE_PRESET;
 
     this.send({
       event,
-      payload: {
-        sceneId,
-        presetId,
-      },
+      payload,
     });
 
     return xsplitRequest(event);

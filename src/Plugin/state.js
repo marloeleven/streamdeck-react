@@ -28,7 +28,7 @@ class Scene {
   }
 
   //{ id, name }[]
-  addSources(sources) {
+  setSources(sources) {
     this.sources = updateMap(this.sources, sources, (source) => source);
 
     return this;

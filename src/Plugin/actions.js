@@ -13,6 +13,11 @@ export const handleKeyUp = ({ action, context, payload: { settings } }) => {
     case ACTIONS.SOURCE:
       XSplit.toggleSourceState(settings).catch(showAlert);
       break;
+    case ACTIONS.PRESET:
+      console.clear();
+      console.warn('setActivePreset', settings);
+      XSplit.setActivePreset(settings).catch(showAlert);
+      break;
     case ACTIONS.RECORD:
       XSplit.toggleRecordingState().catch(showAlert);
       break;
@@ -53,7 +58,12 @@ const loopThroughList = (action, callback) => {
   getList(action).forEach(({ payload: { settings }, context }) => callback(settings, context));
 };
 
-const wrapAsyncCallback = (callback) => new Promise((resolve) => callback().then(resolve));
+const wrapAsyncCallback = (callback) =>
+  new Promise((resolve) =>
+    callback()
+      .then(resolve)
+      .catch((e) => console.log('this waht', e)),
+  );
 
 const asyncLoopThroughList = async (action, callback) => {
   const list = getList(action);
@@ -93,10 +103,13 @@ export const sendToPiScenesList = (scenes) => {
 
 /* SOURCE */
 export const getSourceState = () => {
-  asyncLoopThroughList(ACTIONS.SOURCE, (settings, context) =>
-    XSplit.getSourceState(settings.sceneId, settings.sourceId).then(({ state }) =>
-      toggleState({ context, state }),
-    ),
+  asyncLoopThroughList(
+    ACTIONS.SOURCE,
+    async (settings, context) =>
+      await (settings.sourceId &&
+        XSplit.getSourceState(settings.sceneId, settings.sourceId).then(({ state }) =>
+          toggleState({ context, state }),
+        )),
   );
 };
 
@@ -125,6 +138,15 @@ export const sendToPiSourceList = (sceneId, sources) => {
 
 /* PRESETS */
 
+export const getPresetState = () => {
+  asyncLoopThroughList(ACTIONS.PRESET, async (settings, context) =>
+    XSplit.getActivePreset(settings.sceneId).then((presetId) => {
+      const state = Number(settings.presetId === presetId);
+      toggleState({ context, state });
+    }),
+  );
+};
+
 export const sendToPiPresetsList = (sceneId, presets) => {
   loopThroughList(ACTIONS.PRESET, (settings, context) => {
     if (State.isActivePi(ACTIONS.PRESET, context) && sceneId === settings.sceneId) {
@@ -136,6 +158,15 @@ export const sendToPiPresetsList = (sceneId, presets) => {
           presets,
         },
       });
+    }
+  });
+};
+
+export const togglePresetState = (sceneId, presetId) => {
+  loopThroughList(ACTIONS.PRESET, (settings, context) => {
+    if (settings.sceneId === sceneId) {
+      const state = Number(settings.presetId === presetId);
+      toggleState({ context, state });
     }
   });
 };

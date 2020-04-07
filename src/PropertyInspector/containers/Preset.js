@@ -13,22 +13,30 @@ const getListValue = (list, id) => {
   return value || list[0] || { id: '' };
 };
 
-export default ({ model: { state, setSceneId, setScenesList, setSourceId, setSourceList } }) => {
-  const getSceneSource = useCallback(
+const getValueInArray = (array, id) => {
+  if (array.includes(id)) {
+    return id;
+  }
+
+  return array[0];
+};
+
+export default ({ model: { state, setSceneId, setScenesList, setPresetId, setPresetList } }) => {
+  const getScenePresets = useCallback(
     async (sceneId) => {
       if (sceneId) {
-        const { sources } = await handler.getSceneSources(sceneId);
-        const source = getListValue(sources, '');
-        await setSourceList(sources);
-        await setSourceId(source.id);
+        const { presets } = await handler.getScenePresets(sceneId);
+        const presetId = getValueInArray(presets, '');
+        await setPresetList(presets);
+        await setPresetId(presetId);
         return;
       }
 
       // empty the source
-      await setSourceList([]);
-      await setSourceId('');
+      await setPresetList([]);
+      await setPresetId('');
     },
-    [setSourceId, setSourceList],
+    [setPresetId, setPresetList],
   );
 
   const onSceneChange = useCallback(
@@ -36,53 +44,53 @@ export default ({ model: { state, setSceneId, setScenesList, setSourceId, setSou
       const scene = getListValue(state.scenesList, target.value);
 
       await setSceneId(scene.id);
-      await getSceneSource(scene.id);
+      await getScenePresets(scene.id);
     },
-    [setSceneId, state.scenesList, getSceneSource],
+    [setSceneId, state.scenesList, getScenePresets],
   );
 
-  const onSourceChange = useCallback(
+  const onPresetChange = useCallback(
     ({ target }) => {
-      const source = getListValue(state.sourceList, target.value);
+      const preset = getValueInArray(state.presetList, target.value);
 
-      setSourceId(source.id);
+      setPresetId(preset);
     },
-    [setSourceId, state.sourceList],
+    [setPresetId, state.presetList],
   );
 
   useEffect(() => {
     handler.on(EVENTS.GET.ALL_SCENES, async ({ scenes }) => {
       const scene = getListValue(scenes, state.sceneId);
-      const { sources } = await handler.getSceneSources(scene.id);
-      const source = getListValue(sources, state.sourceId);
+      const { presets } = await handler.getScenePresets(scene.id);
+      const presetId = getValueInArray(presets, state.presetId);
 
       await setScenesList(scenes);
-      await setSourceList(sources);
+      await setPresetList(presets);
       await setSceneId(scene.id);
-      await setSourceId(source.id);
+      await setPresetId(presetId);
     });
 
-    handler.on(EVENTS.GET.SCENE_SOURCES, async ({ sources }) => {
-      const source = getListValue(sources, state.sourceId);
-      await setSourceList(sources);
-      await setSourceId(source.id);
+    handler.on(EVENTS.GET.SCENE_PRESETS, async ({ presets }) => {
+      const presetId = getValueInArray(presets, state.presetId);
+      await setPresetList(presets);
+      await setPresetId(presetId);
     });
-  }, [state.sceneId, state.sourceId, setScenesList, setSceneId, setSourceId, setSourceList]);
+  }, [state.sceneId, state.presetId, setScenesList, setSceneId, setPresetId, setPresetList]);
 
   useEffect(() => {
-    handler.setAction(ACTIONS.SOURCE);
+    handler.setAction(ACTIONS.PRESET);
 
-    handler.getSettings().then(async ({ settings: { sceneId, sourceId } }) => {
+    handler.getSettings().then(async ({ settings: { sceneId, presetId } }) => {
       const { scenes } = await handler.getAllScenes();
       const scene = getListValue(scenes, sceneId);
 
-      const { sources } = await handler.getSceneSources(scene.id);
-      const source = getListValue(sources, sourceId);
+      const { presets } = await handler.getScenePresets(scene.id);
+      const preset = getValueInArray(presets, presetId);
 
       await setScenesList(scenes);
-      await setSourceList(sources);
+      await setPresetList(presets);
       await setSceneId(scene.id);
-      await setSourceId(source.id);
+      await setPresetId(preset);
     });
   }, []);
 
@@ -96,10 +104,10 @@ export default ({ model: { state, setSceneId, setScenesList, setSourceId, setSou
         ))}
       </Select>
 
-      <Select value={state.sourceId} onChange={onSourceChange} label="Source">
-        {state.sourceList.map(({ id, name }) => (
+      <Select value={state.presetId} onChange={onPresetChange} label="Preset">
+        {state.presetList.map((id, index) => (
           <Select.Option key={id} value={id}>
-            {name}
+            Preset {index + 1}
           </Select.Option>
         ))}
       </Select>

@@ -15,6 +15,7 @@ const EVENTS = {
     // handler events
     ALL_SCENES: 'getAllScenes',
     SCENE_SOURCES: 'getSceneSources',
+    SCENE_PRESETS: 'getScenePresets',
   },
   SET: {
     SETTINGS: 'setSettings',
@@ -91,6 +92,7 @@ const EVENTS = {
       SOURCE_VISIBILIY: 'sourcevisibility',
       SOURCE_COUNT: 'sourcecount',
       PRESET_LIST: 'presetlist',
+      PRESET_CHANGE: 'presetchange',
       OUTPUTS_LIST: 'outputslist',
       RECORDING_STATE: 'recordingstate',
       MICROPHONE_STATE: 'microphonestate',

@@ -12,17 +12,17 @@ export const getCallback = (eventName, payload) => {
   return false;
 };
 
-export const isCallbackExist = eventName => callbacks.hasOwnProperty(eventName);
+export const isCallbackExist = (eventName) => callbacks.hasOwnProperty(eventName);
 
-export const createRequest = eventName => {
+export const createRequest = (eventName) => {
   return new Promise((resolve, reject) => {
     const asyncTimeout = setTimeout(() => {
       delete callbacks[eventName];
-      reject('No response received');
+      reject(`No response received: ${eventName}`);
     }, ASYNC_TIMEOUT);
 
     callbacks[eventName] = {
-      callback: asyncResponse => {
+      callback: (asyncResponse) => {
         resolve(asyncResponse);
         delete callbacks[eventName];
       },
@@ -34,8 +34,8 @@ export const createRequest = eventName => {
   });
 };
 
-export const xsplitRequest = eventName => {
-  return createRequest(eventName).then(result => {
+export const xsplitRequest = (eventName) => {
+  return createRequest(eventName).then((result) => {
     if (result.event === 'ERROR') {
       throw new Error(`Error recieved`);
     }
