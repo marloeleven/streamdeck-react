@@ -159,7 +159,6 @@ const onSettingsChange = () => {
 const onPropInspectorHandler = () => {
   // TRACKS CURRENTLY SELECTED PROPERTY INSPECTOR
   Plugin.on(EVENTS.PI.APPEAR, ({ action, context }) => {
-    console.log(context);
     const item = getActionContext(action, context);
 
     if (!item) {
@@ -172,7 +171,6 @@ const onPropInspectorHandler = () => {
   Plugin.on(
     EVENTS.FROM.PROPERTY_INSPECTOR,
     async ({ action, context, payload: { event, ...payload } }) => {
-      console.warn(event, payload);
       switch (event) {
         case EVENTS.GET.ALL_SCENES:
           Plugin.sendToPropertyInspector({

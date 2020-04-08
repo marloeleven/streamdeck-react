@@ -18,42 +18,35 @@ const connectToXSplit = () => {
   };
 
   connect([55511, 55512, 55513], {
-    onOpen: channel => {
+    onOpen: (channel) => {
       console.warn('connected', channel);
-      XSplitHandler.send = data => {
-        console.warn('send', data);
+      XSplitHandler.send = (data) => {
         channel.send(toString(data));
       };
       connectionState$.next(true);
 
       channel.onmessage = onMessage;
       channel.onclose = () => {
-        console.warn('CONNECTION CLOSED');
         connectionState$.next(false);
       };
-      channel.onerror = err => {
-        console.error('ERROR CONNECTING TO RTC', err);
+      channel.onerror = (err) => {
         connectionState$.next(false);
       };
 
       window.addEventListener('beforeunload', () => {
-        console.warn('TRIGGER DISCONNECT');
         channel.close();
       });
     },
     onError: (err, websocket) => {
-      console.warn('Error found while establishing connection', err);
       websocket.close();
       connectionState$.next(false);
     },
   });
 };
 
-connectionState$.subscribe(state => {
+connectionState$.subscribe((state) => {
   if (!state) {
-    of('')
-      .pipe(delay(3000))
-      .subscribe(connectToXSplit);
+    of('').pipe(delay(3000)).subscribe(connectToXSplit);
     return;
   }
 });

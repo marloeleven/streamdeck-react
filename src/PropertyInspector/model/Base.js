@@ -8,7 +8,6 @@ import handler from 'handlers/PropertyInspector';
 const save$ = new Subject();
 
 save$.pipe(debounceTime(250)).subscribe((settings) => {
-  console.warn('SAVE ACCEPTED!', settings);
   handler.setSettings(settings);
 });
 

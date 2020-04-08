@@ -34,7 +34,6 @@ export default () => {
 
   useEffect(() => {
     if (isConnected) {
-      console.warn('Plugin RTC Connected');
       onXSplitConnect();
     }
   }, [isConnected]);

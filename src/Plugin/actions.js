@@ -101,6 +101,19 @@ export const sendToPiScenesList = (scenes) => {
       });
     }
   });
+
+  loopThroughList(ACTIONS.SOURCE, (settings, context) => {
+    if (State.isActivePi(ACTIONS.SOURCE, context)) {
+      Plugin.sendToPropertyInspector({
+        action: ACTIONS.SOURCE,
+        context,
+        payload: {
+          event: EVENTS.GET.ALL_SCENES,
+          scenes,
+        },
+      });
+    }
+  });
 };
 
 /* SOURCE */

@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Provider, Subscribe } from 'unstated';
 
-import Input from 'components/Input';
-import Wrapper from 'components/Wrapper';
-
 import COMPONENTS from 'const/components';
 
 import PropertyInspector from 'handlers/PropertyInspector';
@@ -14,8 +11,6 @@ import Preset from 'containers/Preset';
 import Output from 'containers/Output';
 
 import { SDConnect } from 'utils/connect';
-
-import XSplit from 'handlers/XSplit';
 
 import SceneModel from 'PropertyInspector/model/Scene';
 import SourceModel from 'PropertyInspector/model/Source';
@@ -43,8 +38,6 @@ const renderComponent = (type) => {
 };
 
 // @DEBUGGING
-
-window.XSplit = XSplit;
 window.PropertyInspector = PropertyInspector;
 
 export default () => {

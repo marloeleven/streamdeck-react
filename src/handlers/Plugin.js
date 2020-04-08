@@ -82,13 +82,6 @@ class Plugin extends BaseHandler {
   }
 
   sendToPropertyInspector({ action, context, payload }) {
-    console.warn({
-      context,
-      action,
-      event: EVENTS.TO.PROPERTY_INSPECTOR,
-      payload,
-    });
-
     this.send({
       context,
       action,
