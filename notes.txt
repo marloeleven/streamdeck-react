@@ -70,3 +70,11 @@ on initialize,
  opened PI will not received initial data
 
 - track opened PI, and send appropriate data on RTC connection
+
+
+// adding action
+
+handle key up
+Plugin: get, set, toggle and subscription
+Plugin to PI subscription
+PI to Plugin settings change

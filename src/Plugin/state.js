@@ -71,6 +71,12 @@ class State {
       context: '',
     };
     this.scenesList = new Map();
+    this.outputList = [];
+  }
+
+  setOutputList(outputs) {
+    this.outputList = outputs;
+    return this;
   }
 
   setActivePI(action, context) {

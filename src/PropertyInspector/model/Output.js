@@ -9,7 +9,7 @@ export default class extends Base {
   };
 
   persist = ['id', 'name'];
-  required = ['id'];
+  required = ['id', 'name'];
 
   setList = async (list) => {
     await this.setState(
@@ -19,10 +19,10 @@ export default class extends Base {
     );
   };
 
-  setScene = async (scene) => {
+  setOutput = async (output) => {
     await this.setState(
       produce((draft) => {
-        Object.assign(draft, scene);
+        Object.assign(draft, output);
       }),
     );
 

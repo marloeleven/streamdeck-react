@@ -7,41 +7,41 @@ import ACTIONS from 'const/actions';
 
 import Select from 'components/Select';
 
-const getScene = (scenes, id) => {
-  const scene = scenes.find((scene) => scene.id === id);
+const getOutput = (outputs, id) => {
+  const output = outputs.find((output) => output.id === id);
 
-  return scene || scenes[0];
+  return output || outputs[0];
 };
 
-export default ({ model: { state, setScene, setList } }) => {
+export default ({ model: { state, setOutput, setList } }) => {
   const onChange = useCallback(
     async ({ target }) => {
-      const scene = getScene(state.list, target.value);
+      const scene = getOutput(state.list, target.value);
 
-      await setScene(scene);
+      await setOutput(scene);
     },
-    [state.list, setScene],
+    [state.list, setOutput],
   );
 
   useEffect(() => {
-    handler.on(EVENTS.GET.ALL_SCENES, async ({ scenes }) => {
-      const scene = getScene(scenes, state.id);
-      await setList(scenes);
-      await setScene(scene);
+    handler.on(EVENTS.GET.ALL_OUTPUTS, async ({ outputs }) => {
+      const output = getOutput(outputs, state.id);
+      await setList(outputs);
+      await setOutput(output);
     });
-  }, [state, setList, setScene]);
+  }, [state, setList, setOutput]);
 
   useEffect(() => {
     // specify the manifest plugin action
-    handler.setAction(ACTIONS.SCENE);
+    handler.setAction(ACTIONS.OUTPUT);
 
     handler.getSettings().then(async ({ settings: { id } }) => {
-      const { scenes } = await handler.getAllScenes();
+      const { outputs } = await handler.getAllOutputs();
 
-      const scene = getScene(scenes, id);
+      const output = getOutput(outputs, id);
 
-      await setList(scenes);
-      await setScene(scene);
+      await setList(outputs);
+      await setOutput(output);
     });
   }, []);
 

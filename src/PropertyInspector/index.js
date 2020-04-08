@@ -11,7 +11,7 @@ import PropertyInspector from 'handlers/PropertyInspector';
 import Scene from 'containers/Scene';
 import Source from 'containers/Source';
 import Preset from 'containers/Preset';
-// import Output from 'containers/Output';
+import Output from 'containers/Output';
 
 import { SDConnect } from 'utils/connect';
 
@@ -20,6 +20,7 @@ import XSplit from 'handlers/XSplit';
 import SceneModel from 'PropertyInspector/model/Scene';
 import SourceModel from 'PropertyInspector/model/Source';
 import PresetModel from 'PropertyInspector/model/Preset';
+import OutputModel from 'PropertyInspector/model/Output';
 
 const renderComponent = (type) => {
   switch (type) {
@@ -29,23 +30,13 @@ const renderComponent = (type) => {
       return <Subscribe to={[SourceModel]}>{(source) => <Source model={source} />}</Subscribe>;
     case COMPONENTS.PRESET:
       return <Subscribe to={[PresetModel]}>{(preset) => <Preset model={preset} />}</Subscribe>;
-    // case COMPONENTS.OUTPUTS:
-    //   return <Output />;
+    case COMPONENTS.OUTPUT:
+      return <Subscribe to={[OutputModel]}>{(output) => <Output model={output} />}</Subscribe>;
     case COMPONENTS.RECORD:
     case COMPONENTS.SCREENSHOT:
     case COMPONENTS.MICRPHONE:
     case COMPONENTS.SPEAKER:
       return null;
-    case 'radio':
-      return (
-        <Wrapper.Radio label="Test">
-          <Input.Radio defaultValue="test" label="on" />
-        </Wrapper.Radio>
-      );
-    case 'email':
-      return <Input.Email />;
-    case 'password':
-      return <Input.Password />;
     default:
       return <Scene />;
   }

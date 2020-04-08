@@ -83,6 +83,23 @@ class PropertyInspector extends BaseHandler {
     return createRequest(event);
   }
 
+  getAllOutputs() {
+    const { action, uuid: context } = this;
+
+    const event = EVENTS.GET.ALL_OUTPUTS;
+
+    super.send({
+      context,
+      action,
+      event: EVENTS.TO.PLUGIN,
+      payload: {
+        event,
+      },
+    });
+
+    return createRequest(event);
+  }
+
   sendToPlugin(args) {
     const { action, uuid: context } = this;
 

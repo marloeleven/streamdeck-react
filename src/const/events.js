@@ -13,6 +13,7 @@ const EVENTS = {
     SETTINGS: 'getSettings',
     GLOBAL_SETTINGS: 'getGlobalSettings',
     // handler events
+    ALL_OUTPUTS: 'getAllOutputs',
     ALL_SCENES: 'getAllScenes',
     SCENE_SOURCES: 'getSceneSources',
     SCENE_PRESETS: 'getScenePresets',
@@ -58,8 +59,9 @@ const EVENTS = {
         ALL: 'getScenePresets',
         ACTIVE: 'getActivePreset',
       },
-      RECORDING: {
-        STATE: 'getRecordingState',
+      OUTPUT: {
+        ALL: 'getOutputList',
+        STATE: 'getOutputState',
       },
       MICROPHONE: {
         STATE: 'getMicrophoneState',
@@ -67,7 +69,6 @@ const EVENTS = {
       SPEAKER: {
         STATE: 'getSpeakerState',
       },
-      OUTPUTS: 'getAllOutputs',
     },
     SET: {
       SOURCE_STATE: 'setSourceState',
@@ -76,7 +77,7 @@ const EVENTS = {
     },
     TOGGLE: {
       SOURCE_STATE: 'toggleSourceState',
-      RECORD_STATE: 'toggleRecordingState',
+      OUTPUT_STATE: 'toggleOutputState',
       MICROPHONE_STATE: 'toggleMicrophoneState',
       SPEAKER_STATE: 'toggleSpeakerState',
     },
@@ -93,7 +94,8 @@ const EVENTS = {
       SOURCE_COUNT: 'sourcecount',
       PRESET_LIST: 'presetlist',
       PRESET_CHANGE: 'presetchange',
-      OUTPUTS_LIST: 'outputslist',
+      OUTPUT_LIST: 'outputlist',
+      OUTPUT_STATE: 'outputstate',
       RECORDING_STATE: 'recordingstate',
       MICROPHONE_STATE: 'microphonestate',
       SPEAKER_STATE: 'speakerstate',

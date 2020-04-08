@@ -2,6 +2,7 @@ import ActionsList from 'handlers/ActionsListHandler';
 import XSplit from 'handlers/XSplit';
 import ACTIONS from 'const/actions';
 import EVENTS from 'const/events';
+import { LOCAL_RECORDING } from 'const';
 import State from './state';
 
 export const handleKeyUp = ({ action, context, payload: { settings } }) => {
@@ -14,12 +15,13 @@ export const handleKeyUp = ({ action, context, payload: { settings } }) => {
       XSplit.toggleSourceState(settings).catch(showAlert);
       break;
     case ACTIONS.PRESET:
-      console.clear();
-      console.warn('setActivePreset', settings);
       XSplit.setActivePreset(settings).catch(showAlert);
       break;
     case ACTIONS.RECORD:
-      XSplit.toggleRecordingState().catch(showAlert);
+      XSplit.toggleOutputState({ id: LOCAL_RECORDING }).catch(showAlert);
+      break;
+    case ACTIONS.OUTPUT:
+      XSplit.toggleOutputState({ id: settings.id }).catch(showAlert);
       break;
     case ACTIONS.SCREENSHOT:
       XSplit.doScreenshot().catch(showAlert);
@@ -171,10 +173,48 @@ export const togglePresetState = (sceneId, presetId) => {
   });
 };
 
+/* OUTPUT */
 /* RECORD */
-export const toggleRecordingState = (state) => {
-  loopThroughList(ACTIONS.RECORD, (settings, context) => {
-    toggleState({ context, state });
+export const getOutputState = async () => {
+  await asyncLoopThroughList(ACTIONS.RECORD, async (settings, context) =>
+    XSplit.getOutputState({ id: LOCAL_RECORDING }).then(({ state }) =>
+      toggleState({ context, state }),
+    ),
+  );
+
+  asyncLoopThroughList(ACTIONS.OUTPUT, async (settings, context) => {
+    if (settings.id) {
+      await XSplit.getOutputState({ id: settings.id }).then(({ state }) =>
+        toggleState({ context, state }),
+      );
+    }
+  });
+};
+
+export const sendToPiOutputsList = (outputs) => {
+  loopThroughList(ACTIONS.OUTPUT, (settings, context) => {
+    if (State.isActivePi(ACTIONS.OUTPUT, context)) {
+      Plugin.sendToPropertyInspector({
+        action: ACTIONS.OUTPUT,
+        context,
+        payload: {
+          event: EVENTS.GET.ALL_OUTPUTS,
+          outputs,
+        },
+      });
+    }
+  });
+};
+
+export const toggleOutputState = (id, state) => {
+  if (id === LOCAL_RECORDING) {
+    loopThroughList(ACTIONS.RECORD, (settings, context) => {
+      toggleState({ context, state });
+    });
+    return;
+  }
+  loopThroughList(ACTIONS.OUTPUT, (settings, context) => {
+    settings.id === id && toggleState({ context, state });
   });
 };
 

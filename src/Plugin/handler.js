@@ -14,24 +14,25 @@ import {
   sendToPiScenesList,
   sendToPiSourceList,
   sendToPiPresetsList,
-
+  sendToPiOutputsList,
   // state toggling
 
   // get intial state
   getSourceState,
   getPresetState,
+  getOutputState,
 
   // subscription toggle
   toggleSceneState,
   toggleState,
   toggleSourceState,
   togglePresetState,
-  toggleRecordingState,
+  toggleOutputState,
   toggleMicrophoneState,
   toggleSpeakerState,
 } from './actions';
 
-import { getScenesList, getSceneSources, getScenePresets } from './helper';
+import { getScenesList, getOutputsList, getSceneSources, getScenePresets } from './helper';
 
 const { SUBSCRIPTION_EVENTS: SUBSCRIPTION } = EVENTS.XSPLIT;
 
@@ -43,14 +44,16 @@ const getState = async () => {
 
   getPresetState();
 
-  XSplit.getRecordingState().then(({ state }) => toggleRecordingState(state));
+  getOutputState();
 
   XSplit.getMicrophoneState().then(({ state }) => toggleMicrophoneState(state));
   XSplit.getSpeakerState().then(({ state }) => toggleSpeakerState(state));
 };
 
-const getAllList = async () =>
-  await XSplit.getAllScenes().then(async (scenesList = []) => {
+const getAllList = async () => {
+  await XSplit.getAllOutputs().then((outputs = []) => State.setOutputList(outputs));
+
+  return await XSplit.getAllScenes().then(async (scenesList = []) => {
     for (const sceneItem of scenesList) {
       await State.addScene(sceneItem).then(async (scene) => {
         await XSplit.getSceneSources(scene.id).then((sources) => scene.setSources(sources));
@@ -58,13 +61,12 @@ const getAllList = async () =>
       });
     }
   });
+};
 
 // SUBSCRIBE TO XSPLIT EVENTS
 const onXSplitEvents = () => {
-  console.log('TRIGGER XSPLIT SUBSCRIPTIOM');
   XSplit.on(SUBSCRIPTION.SCENES_LIST, async (payload) => {
     XSplit.getAllScenes().then(async (scenes) => {
-      console.warn('SCENES:', scenes, payload);
       await State.updateList(scenes);
 
       sendToPiScenesList(getScenesList());
@@ -87,6 +89,15 @@ const onXSplitEvents = () => {
     });
   });
 
+  XSplit.on(SUBSCRIPTION.OUTPUT_LIST, (outputs) => {
+    State.setOutputList(outputs);
+    sendToPiOutputsList(getOutputsList());
+  });
+
+  XSplit.on(SUBSCRIPTION.OUTPUT_STATE, ({ id, state }) => {
+    toggleOutputState(id, state);
+  });
+
   XSplit.on(SUBSCRIPTION.PRESET_CHANGE, ({ sceneId, presetId }) => {
     togglePresetState(sceneId, presetId);
   });
@@ -96,8 +107,6 @@ const onXSplitEvents = () => {
   XSplit.on(SUBSCRIPTION.SOURCE_VISIBILIY, ({ sceneId, sourceId, state }) =>
     toggleSourceState(sceneId, sourceId, state),
   );
-
-  XSplit.on(SUBSCRIPTION.RECORDING_STATE, ({ state }) => toggleRecordingState(state));
 
   XSplit.on(SUBSCRIPTION.MICROPHONE_STATE, ({ state }) => {
     toggleMicrophoneState(state);
@@ -133,6 +142,13 @@ const onSettingsChange = () => {
     if (action === ACTIONS.PRESET) {
       XSplit.getActivePreset(settings.sceneId).then((presetId) => {
         const state = Number(settings.presetId === presetId);
+        toggleState({ context, state });
+      });
+      return;
+    }
+
+    if (action === ACTIONS.OUTPUT) {
+      XSplit.getOutputState({ id: settings.id }).then(({ state }) => {
         toggleState({ context, state });
       });
       return;
@@ -185,6 +201,16 @@ const onPropInspectorHandler = () => {
             payload: {
               event,
               presets: await getScenePresets(payload.sceneId),
+            },
+          });
+          break;
+        case EVENTS.GET.ALL_OUTPUTS:
+          Plugin.sendToPropertyInspector({
+            action,
+            context,
+            payload: {
+              event,
+              outputs: getOutputsList(),
             },
           });
           break;

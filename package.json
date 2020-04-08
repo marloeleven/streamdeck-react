@@ -24,7 +24,8 @@
     "start": "rescripts start",
     "build": "rescripts build",
     "test": "rescripts test",
-    "eject": "rescripts eject"
+    "eject": "rescripts eject",
+    "update": "yarn upgrade streamdeck-xsplit-connect@https://gitlab.xsplit.com/xsplit-plugins/xjs-client-connect.git"
   },
   "eslintConfig": {
     "extends": "react-app"

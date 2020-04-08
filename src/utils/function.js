@@ -5,9 +5,9 @@ import isFunction from 'lodash/fp/isFunction';
 
 export { isString, isObject, isNumber, isFunction };
 
-export const noop = e => e;
+export const noop = (e) => e;
 
-export const parse = stringedJson => {
+export const parse = (stringedJson) => {
   if ([null, undefined].includes(stringedJson)) {
     return {};
   }
@@ -27,8 +27,8 @@ export const parse = stringedJson => {
   }
 };
 
-export const toString = jsonObject => {
-  if (typeof jsonObject === 'string') {
+export const toString = (jsonObject) => {
+  if (isString(jsonObject)) {
     return jsonObject;
   }
 
@@ -41,5 +41,5 @@ export const toString = jsonObject => {
 
 export const asyncIterator = (array, callback) =>
   array.reduce((promise, value, index) => {
-    return promise.then(result => callback(value, index, result));
+    return promise.then((result) => callback(value, index, result));
   }, Promise.resolve());

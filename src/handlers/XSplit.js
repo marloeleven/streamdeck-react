@@ -126,17 +126,25 @@ class XSpltHandler {
   }
 
   /* RECORDING */
-  toggleRecordingState() {
-    const event = EVENTS.XSPLIT.TOGGLE.RECORD_STATE;
-
-    this.send({ event, payload: {} });
+  /* OUTPUT */
+  getAllOutputs() {
+    const event = EVENTS.XSPLIT.GET.OUTPUT.ALL;
+    this.send({ event });
 
     return xsplitRequest(event);
   }
 
-  getRecordingState() {
-    const event = EVENTS.XSPLIT.GET.RECORDING.STATE;
-    this.send({ event, payload: {} });
+  getOutputState(payload) {
+    const event = EVENTS.XSPLIT.GET.OUTPUT.STATE;
+    this.send({ event, payload });
+
+    return xsplitRequest(event);
+  }
+
+  toggleOutputState(payload) {
+    const event = EVENTS.XSPLIT.TOGGLE.OUTPUT_STATE;
+
+    this.send({ event, payload });
 
     return xsplitRequest(event);
   }
