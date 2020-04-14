@@ -9,7 +9,7 @@ const resolutions = {
 module.exports = [
   {
     //  externals and alias configuration
-    webpack: config => {
+    webpack: (config) => {
       // JS
       config.resolve.alias = {
         ...resolutions,
@@ -18,9 +18,6 @@ module.exports = [
 
       config.entry = {
         main: './src/index.js',
-        // main: './src/Plugin/index.js',
-        // Plugin: './src/Plugin/index.js',
-        // PropertyInspector: './src/PropertyInspector/index.js',
       };
 
       config.output.path = __dirname + '/build';

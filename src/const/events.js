@@ -44,6 +44,8 @@ const EVENTS = {
     RECEIVE_FROM_PI: 'sendToPlugin',
     KEY_UP: 'keyUp',
     KEY_DOWN: 'keyDown',
+    APP_LAUNCH: 'applicationDidLaunch',
+    APP_TERMINATE: 'applicationDidTerminate',
   },
   XSPLIT: {
     GET: {

@@ -28,6 +28,13 @@ export default () => {
   useEffect(() => {
     SDConnect(Plugin).then(() => {
       Plugin.on(EVENTS.PLUGIN.KEY_UP, handleKeyUp);
+      Plugin.on(EVENTS.PLUGIN.APP_LAUNCH, (...args) => {
+        console.warn('lauch', args);
+      });
+      Plugin.on(EVENTS.PLUGIN.APP_TERMINATE, (...args) => {
+        console.warn('terminate', args);
+      });
+
       subscribeToEvents();
     });
   }, []);

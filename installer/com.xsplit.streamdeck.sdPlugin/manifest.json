@@ -1,0 +1,144 @@
+{
+  "Actions": [
+    {
+      "Icon": "action/images/xsplit_scene_white", 
+      "Name": "Scene", 
+      "States": [
+				{
+          "Image": "action/images/btn_xsplit_scene_inactive"
+        },
+				{
+          "Image": "action/images/btn_xsplit_scene"
+        }
+      ], 
+      "Tooltip": "Set Active Scene", 
+      "UUID": "com.xsplit.streamdeck.scene"
+    },
+		{
+      "Icon": "action/images/xsplit_toggle_source_white", 
+      "Name": "Source", 
+      "States": [
+				{
+          "Image": "action/images/btn_xsplit_toggle_source_inactive"
+        },
+				{
+          "Image": "action/images/btn_xsplit_toggle_source"
+        }
+      ], 
+      "Tooltip": "Activate/Deactivate Source", 
+      "UUID": "com.xsplit.streamdeck.source"
+    },
+		{
+      "Icon": "action/images/btn_xsplit_presetswitch_white", 
+      "Name": "Preset", 
+      "States": [
+				{
+          "Image": "action/images/btn_xsplit_presetswitch_inactive"
+        },
+				{
+          "Image": "action/images/btn_xsplit_presetswitch"
+        }
+      ], 
+      "Tooltip": "Activate Scene Preset", 
+      "UUID": "com.xsplit.streamdeck.preset"
+    },
+		{
+      "Icon": "action/images/xsplit_toggle_output_white", 
+      "Name": "Output", 
+      "States": [
+				{
+          "Image": "action/images/btn_xsplit_toggle_output_inactive"
+        },
+				{
+          "Image": "action/images/btn_xsplit_toggle_output"
+        }
+      ], 
+      "Tooltip": "Start/Stop Stream Output", 
+      "UUID": "com.xsplit.streamdeck.output"
+    },
+		{
+      "Icon": "action/images/xsplit_toggle_recording_white", 
+      "Name": "Record", 
+      "States": [
+				{
+          "Image": "action/images/btn_xsplit_toggle_recording_inactive"
+        },
+				{
+          "Image": "action/images/btn_xsplit_toggle_recording"
+        }
+      ], 
+      "Tooltip": "Start/Stop recording", 
+      "UUID": "com.xsplit.streamdeck.record"
+    },
+		{
+      "Icon": "action/images/xsplit_screenshot_white", 
+      "Name": "Screenshot", 
+      "States": [
+				{
+          "Image": "action/images/btn_xsplit_screenshot"
+        }
+      ], 
+      "Tooltip": "Take a snapshot of your screen", 
+      "UUID": "com.xsplit.streamdeck.screenshot"
+    },
+		{
+      "Icon": "action/images/xsplit_toggle_microphone_white", 
+      "Name": "Microphone", 
+      "States": [
+				{
+          "Image": "action/images/btn_xsplit_toggle_microphone_inactive"
+        },
+				{
+          "Image": "action/images/btn_xsplit_toggle_microphone"
+        }
+      ], 
+      "Tooltip": "Take a snapshot of your screen", 
+      "UUID": "com.xsplit.streamdeck.microphone"
+    },
+		{
+      "Icon": "action/images/xsplit_toggle_desktop_audio_white", 
+      "Name": "Speaker", 
+      "States": [
+				{
+          "Image": "action/images/btn_xsplit_toggle_desktop_audio_inactive"
+        },
+				{
+          "Image": "action/images/btn_xsplit_toggle_desktop_audio"
+        }
+      ], 
+      "Tooltip": "Take a snapshot of your screen", 
+      "UUID": "com.xsplit.streamdeck.speaker"
+    }
+  ], 
+  "SDKVersion": 2,
+  "Author": "Splitmedialabs", 
+  "CodePath": "index.html", 
+  "PropertyInspectorPath": "index_pi.html", 
+  "Description": "XSplit Streamdeck Plugin.", 
+  "Name": "XSplit Controller", 
+  "Icon": "action/images/btn_xsplit_scene_inactive", 
+	"Category": "XSplit Broadcaster",
+	"CategoryIcon": "action/images/cat_icon-xsplit", 
+  "URL": "https://www.xsplit.com/", 
+  "Version": "1.0",
+  "OS": [
+    {
+        "Platform": "mac", 
+        "MinimumVersion" : "10.11"
+    },
+    {
+        "Platform": "windows", 
+        "MinimumVersion" : "10"
+    }
+  ],
+  "ApplicationsToMonitor": {
+    "mac": [],
+    "windows": [
+      "XSplit.Core.exe"
+    ]
+  },
+  "Software": 
+    {
+        "MinimumVersion" : "4.1"
+    }
+}

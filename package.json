@@ -22,9 +22,13 @@
   },
   "scripts": {
     "start": "rescripts start",
-    "build": "rescripts build",
+    "build": "rescripts build && yarn copyJs && yarn copyCss && yarn installer",
     "test": "rescripts test",
     "eject": "rescripts eject",
+    "copyJs": "cp ./build/build.js ./installer/com.xsplit.streamdeck.sdPlugin/build.js",
+    "copyCss": "cp ./build/static/css/*.css ./installer/com.xsplit.streamdeck.sdPlugin/css/main.css",
+    "removeInstaller": "rm -rf installer/Release/com.xsplit.streamdeck.streamDeckPlugin",
+    "installer": "yarn removeInstaller && cd ./installer && DistributionTool.exe -b -i com.xsplit.streamdeck.sdPlugin -o Release",
     "update": "yarn upgrade streamdeck-xsplit-connect@https://gitlab.xsplit.com/xsplit-plugins/xjs-client-connect.git"
   },
   "eslintConfig": {
