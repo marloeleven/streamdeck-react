@@ -179,6 +179,13 @@ class XSpltHandler {
     return xsplitRequest(event);
   }
 
+  setPushToTalk(state) {
+    const event = EVENTS.XSPLIT.SET.PUSH_TO_TALK;
+    this.send({ event, payload: { state } });
+
+    return xsplitRequest(event);
+  }
+
   /* SPEAKER */
   toggleSpeakerState() {
     const event = EVENTS.XSPLIT.TOGGLE.SPEAKER_STATE;

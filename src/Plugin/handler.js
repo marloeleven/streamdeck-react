@@ -153,6 +153,11 @@ const onSettingsChange = () => {
       });
       return;
     }
+
+    if (action === ACTIONS.MICROPHONE) {
+      XSplit.setPushToTalk(String(settings.pushToTalk));
+      return;
+    }
   });
 };
 

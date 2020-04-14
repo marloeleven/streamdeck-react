@@ -12,7 +12,7 @@ export const handleKeyUp = ({ action, context, payload: { settings } }) => {
       XSplit.setActiveScene(settings).catch(showAlert);
       break;
     case ACTIONS.SOURCE:
-      XSplit.toggleSourceState(settings).catch(showAlert);
+      XSplit.toggleSourceState(settings).then(getSourceState).catch(showAlert);
       break;
     case ACTIONS.PRESET:
       XSplit.setActivePreset(settings).catch(showAlert);
@@ -26,7 +26,7 @@ export const handleKeyUp = ({ action, context, payload: { settings } }) => {
     case ACTIONS.SCREENSHOT:
       XSplit.doScreenshot().catch(showAlert);
       break;
-    case ACTIONS.MICRPHONE:
+    case ACTIONS.MICROPHONE:
       XSplit.toggleMicrophoneState()
         .then(({ state }) => toggleMicrophoneState(state))
         .catch(showAlert);
@@ -233,7 +233,7 @@ export const toggleOutputState = (id, state) => {
 
 /* MICROPHONE */
 export const toggleMicrophoneState = (state) => {
-  loopThroughList(ACTIONS.MICRPHONE, (settings, context) => {
+  loopThroughList(ACTIONS.MICROPHONE, (settings, context) => {
     toggleState({ context, state });
   });
 };

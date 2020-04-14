@@ -53,7 +53,7 @@ export default ({
     [setSourceId, state.sourceList],
   );
 
-  const onToggleLinked = ({ target }) => setToggleLinked(target.checked);
+  const onToggleLinked = ({ target }) => setToggleLinked(Number(target.checked));
 
   useEffect(() => {
     handler.on(EVENTS.GET.ALL_SCENES, async ({ scenes }) => {
@@ -113,7 +113,7 @@ export default ({
       <Input.Checkbox
         label="Toggle Linked Sources"
         onChange={onToggleLinked}
-        checked={state.toggleLinked}
+        checked={Boolean(state.toggleLinked)}
       ></Input.Checkbox>
     </>
   );

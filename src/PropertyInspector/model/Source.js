@@ -9,7 +9,7 @@ export default class extends Base {
     sourceId: '',
     sourceList: [],
 
-    toggleLinked: false,
+    toggleLinked: 0,
   };
 
   persist = ['sceneId', 'sourceId', 'toggleLinked'];
@@ -51,10 +51,10 @@ export default class extends Base {
     );
   };
 
-  setToggleLinked = async (bool) => {
+  setToggleLinked = async (state) => {
     await this.setState(
       produce((draft) => {
-        draft.toggleLinked = bool;
+        draft.toggleLinked = state;
       }),
     );
 

@@ -74,6 +74,7 @@ const EVENTS = {
       SOURCE_STATE: 'setSourceState',
       ACTIVE_SCENE: 'setActiveScene',
       ACTIVE_PRESET: 'setActivePreset',
+      PUSH_TO_TALK: 'setPushToTalk',
     },
     TOGGLE: {
       SOURCE_STATE: 'toggleSourceState',

@@ -9,6 +9,7 @@ import Scene from 'containers/Scene';
 import Source from 'containers/Source';
 import Preset from 'containers/Preset';
 import Output from 'containers/Output';
+import Microphone from 'containers/Microphone';
 
 import { SDConnect } from 'utils/connect';
 
@@ -16,6 +17,7 @@ import SceneModel from 'PropertyInspector/model/Scene';
 import SourceModel from 'PropertyInspector/model/Source';
 import PresetModel from 'PropertyInspector/model/Preset';
 import OutputModel from 'PropertyInspector/model/Output';
+import MicrophoneModel from 'PropertyInspector/model/Microphone';
 
 const renderComponent = (type) => {
   switch (type) {
@@ -27,9 +29,14 @@ const renderComponent = (type) => {
       return <Subscribe to={[PresetModel]}>{(preset) => <Preset model={preset} />}</Subscribe>;
     case COMPONENTS.OUTPUT:
       return <Subscribe to={[OutputModel]}>{(output) => <Output model={output} />}</Subscribe>;
+    case COMPONENTS.MICROPHONE:
+      return (
+        <Subscribe to={[MicrophoneModel]}>
+          {(microphone) => <Microphone model={microphone} />}
+        </Subscribe>
+      );
     case COMPONENTS.RECORD:
     case COMPONENTS.SCREENSHOT:
-    case COMPONENTS.MICRPHONE:
     case COMPONENTS.SPEAKER:
       return null;
     default:

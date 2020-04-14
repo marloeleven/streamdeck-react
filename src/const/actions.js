@@ -5,6 +5,6 @@ export default {
   RECORD: 'com.xsplit.streamdeck.record',
   OUTPUT: 'com.xsplit.streamdeck.output',
   SCREENSHOT: 'com.xsplit.streamdeck.screenshot',
-  MICRPHONE: 'com.xsplit.streamdeck.microphone',
+  MICROPHONE: 'com.xsplit.streamdeck.microphone',
   SPEAKER: 'com.xsplit.streamdeck.speaker',
 };

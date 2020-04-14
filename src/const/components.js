@@ -5,6 +5,6 @@ export default {
   RECORD: 'record',
   OUTPUT: 'output',
   SCREENSHOT: 'screenshot',
-  MICRPHONE: 'microphone',
+  MICROPHONE: 'microphone',
   SPEAKER: 'speaker',
 };
