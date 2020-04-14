@@ -1,7 +1,8 @@
 import React from 'react';
+import cx from 'classnames';
 
-const Item = ({ children, label, ...props }) => (
-  <div className="sdpi-item" {...props}>
+const Item = ({ children, label, className, ...props }) => (
+  <div className={cx('sdpi-item', className)} {...props}>
     <div className="sdpi-item-label">{label}</div>
     {children}
   </div>

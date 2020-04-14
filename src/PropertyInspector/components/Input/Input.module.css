@@ -1,0 +1,36 @@
+.checkbox :global(.sdpi-item-label) {
+  visibility: hidden;
+}
+
+.checkbox :global(label) {
+  display: flex;
+  align-items: center;
+  user-select: none;
+}
+
+.checkbox :global(input) {
+  display: inline-block;
+  height: 18px;
+  width: 18px;
+  min-width: 0;
+  border-radius: 2px;
+  margin-right: 6px;
+  position: relative;
+}
+
+.checkbox :global(input:checked) {
+  background-color: #5267ff;
+}
+
+.checkbox :global(input:checked:after) {
+  content: '';
+  position: absolute;
+  height: 11px;
+  width: 5px;
+  border: 1px solid white;
+  border-top-width: 0;
+  border-left-width: 0;
+  transform: rotate(40deg);
+  left: 6px;
+  top: 1px;
+}

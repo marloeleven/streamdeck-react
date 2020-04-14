@@ -6,6 +6,7 @@ import EVENTS from 'const/events';
 import ACTIONS from 'const/actions';
 
 import Select from 'components/Select';
+import Input from 'components/Input';
 
 const getListValue = (list, id) => {
   const value = list.find((item) => item.id === id);
@@ -13,7 +14,9 @@ const getListValue = (list, id) => {
   return value || list[0] || { id: '' };
 };
 
-export default ({ model: { state, setSceneId, setScenesList, setSourceId, setSourceList } }) => {
+export default ({
+  model: { state, setSceneId, setScenesList, setSourceId, setSourceList, setToggleLinked },
+}) => {
   const getSceneSource = useCallback(
     async (sceneId) => {
       if (sceneId) {
@@ -50,6 +53,8 @@ export default ({ model: { state, setSceneId, setScenesList, setSourceId, setSou
     [setSourceId, state.sourceList],
   );
 
+  const onToggleLinked = ({ target }) => setToggleLinked(target.checked);
+
   useEffect(() => {
     handler.on(EVENTS.GET.ALL_SCENES, async ({ scenes }) => {
       const scene = getListValue(scenes, state.sceneId);
@@ -72,7 +77,7 @@ export default ({ model: { state, setSceneId, setScenesList, setSourceId, setSou
   useEffect(() => {
     handler.setAction(ACTIONS.SOURCE);
 
-    handler.getSettings().then(async ({ settings: { sceneId, sourceId } }) => {
+    handler.getSettings().then(async ({ settings: { sceneId, sourceId, toggleLinked } }) => {
       const { scenes } = await handler.getAllScenes();
       const scene = getListValue(scenes, sceneId);
 
@@ -83,6 +88,7 @@ export default ({ model: { state, setSceneId, setScenesList, setSourceId, setSou
       await setSourceList(sources);
       await setSceneId(scene.id);
       await setSourceId(source.id);
+      await setToggleLinked(toggleLinked);
     });
   }, []);
 
@@ -103,6 +109,12 @@ export default ({ model: { state, setSceneId, setScenesList, setSourceId, setSou
           </Select.Option>
         ))}
       </Select>
+
+      <Input.Checkbox
+        label="Toggle Linked Sources"
+        onChange={onToggleLinked}
+        checked={state.toggleLinked}
+      ></Input.Checkbox>
     </>
   );
 };

@@ -3,6 +3,8 @@ import cx from 'classnames';
 import Item from 'components/Item';
 import Wrapper from 'components/Wrapper';
 
+import css from './Input.module.css';
+
 const PATTERN = {
   IP_ADDRESS: 'd{1,3}.d{1,3}.d{1,3}.d{1,3}',
   EMAIL:
@@ -19,23 +21,18 @@ const Label = ({ children, label, ...props }) => (
   </label>
 );
 
-export const Text = forwardRef((props, ref) => (
-  <BaseInput type="text" ref={ref} {...props} />
-));
+export const Text = forwardRef((props, ref) => <BaseInput type="text" ref={ref} {...props} />);
 export const Number = forwardRef((props, ref) => (
-  <Number
-    pattern={PATTERN.NUBMER}
-    inputmode="numeric"
-    type="number"
-    ref={ref}
-    {...props}
-  />
+  <Number pattern={PATTERN.NUBMER} inputmode="numeric" type="number" ref={ref} {...props} />
 ));
 export const Password = forwardRef((props, ref) => (
   <BaseInput type="password" ref={ref} {...props} />
 ));
-export const Checkbox = forwardRef((props, ref) => (
-  <BaseInput type="checbox" ref={ref} {...props} />
+export const Checkbox = forwardRef(({ label, ...props }, ref) => (
+  <label>
+    <BaseInput type="checkbox" ref={ref} {...props} />
+    {label}
+  </label>
 ));
 export const Radio = forwardRef((props, ref) => (
   <BaseInput type="radio" onChange={console.warn} ref={ref} {...props} />
@@ -71,8 +68,8 @@ export default {
       <Password ref={ref} className="sdpi-item-value" {...props} />
     </Wrapper.Input>
   )),
-  Checkbox: forwardRef(({ label, ...props }, ref) => (
-    <Wrapper.Input label={label}>
+  Checkbox: forwardRef((props, ref) => (
+    <Wrapper.Input className={css.checkbox}>
       <Checkbox ref={ref} className="sdpi-item-value" {...props} />
     </Wrapper.Input>
   )),
@@ -80,7 +77,7 @@ export default {
     const [checked, setChecked] = useState(defaultValue);
 
     const onClickHandler = useCallback(() => {
-      setChecked(checked => !checked);
+      setChecked((checked) => !checked);
     }, []);
 
     return (

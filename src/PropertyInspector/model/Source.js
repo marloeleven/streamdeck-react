@@ -8,9 +8,11 @@ export default class extends Base {
 
     sourceId: '',
     sourceList: [],
+
+    toggleLinked: false,
   };
 
-  persist = ['sceneId', 'sourceId'];
+  persist = ['sceneId', 'sourceId', 'toggleLinked'];
   required = ['sceneId'];
 
   setSceneId = async (id) => {
@@ -47,5 +49,15 @@ export default class extends Base {
         draft.sourceList = list;
       }),
     );
+  };
+
+  setToggleLinked = async (bool) => {
+    await this.setState(
+      produce((draft) => {
+        draft.toggleLinked = bool;
+      }),
+    );
+
+    this.save();
   };
 }
