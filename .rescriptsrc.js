@@ -17,11 +17,11 @@ module.exports = [
       };
 
       config.entry = {
-        main: './src/index.js',
+        main: `./src/${process.env.ENTRY_FILE}`,
       };
 
       config.output.path = __dirname + '/build';
-      config.output.filename = 'build.js';
+      config.output.filename = process.env.OUTPUT_FILE;
 
       config.optimization.splitChunks = {
         name: true,

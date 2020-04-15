@@ -24,3 +24,6 @@ yarn-debug.log*
 yarn-error.log*
 installer/com.xsplit.streamdeck.sdPlugin/build.js
 installer/com.xsplit.streamdeck.sdPlugin/css/main.css
+installer/com.xsplit.streamdeck.sdPlugin/pi.js
+installer/com.xsplit.streamdeck.sdPlugin/plugin.js
+*.txt
