@@ -6,6 +6,7 @@ import ActionsList from 'handlers/ActionsListHandler';
 import EVENTS from 'const/events';
 
 import { SDConnect } from 'utils/connect';
+import connectToXSplit, { launched$ } from 'utils/connect/XSplitConnect';
 
 import useXSplit from 'hooks/useXSplit';
 
@@ -28,15 +29,15 @@ export default () => {
   useEffect(() => {
     SDConnect(Plugin).then(() => {
       Plugin.on(EVENTS.PLUGIN.KEY_UP, handleKeyUp);
-      Plugin.on(EVENTS.PLUGIN.APP_LAUNCH, (...args) => {
-        console.warn('lauch', args);
-      });
-      Plugin.on(EVENTS.PLUGIN.APP_TERMINATE, (...args) => {
-        console.warn('terminate', args);
-      });
+
+      Plugin.on(EVENTS.PLUGIN.APP_LAUNCH, () => launched$.next(true));
+
+      Plugin.on(EVENTS.PLUGIN.APP_TERMINATE, () => launched$.next(false));
 
       subscribeToEvents();
     });
+
+    connectToXSplit();
   }, []);
 
   useEffect(() => {

@@ -1,10 +1,10 @@
 import connect from 'streamdeck-xsplit-connect';
 import XSplitHandler from 'handlers/XSplit';
 import { toString, parse } from 'utils/function';
-import { Subject, of } from 'rxjs';
-import { delay } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest } from 'rxjs';
 
-export const connectionState$ = new Subject(false);
+export const connectionState$ = new BehaviorSubject(false);
+export const launched$ = new BehaviorSubject(false);
 
 const connectToXSplit = () => {
   const onMessage = ({ data }) => {
@@ -17,37 +17,38 @@ const connectToXSplit = () => {
     }
   };
 
-  connect([55511, 55512, 55513], {
-    onOpen: (channel) => {
-      console.warn('connected', channel);
-      XSplitHandler.send = (data) => {
-        channel.send(toString(data));
-      };
-      connectionState$.next(true);
+  connect(
+    [55511, 55512, 55513],
+    {
+      onOpen: (channel) => {
+        XSplitHandler.send = (data) => {
+          channel.send(toString(data));
+        };
+        connectionState$.next(true);
 
-      channel.onmessage = onMessage;
-      channel.onclose = () => {
-        connectionState$.next(false);
-      };
-      channel.onerror = (err) => {
-        connectionState$.next(false);
-      };
+        channel.onmessage = onMessage;
+        channel.onclose = () => {
+          connectionState$.next(false);
+        };
+        channel.onerror = (err) => {
+          connectionState$.next(false);
+        };
 
-      window.addEventListener('beforeunload', () => {
-        channel.close();
-      });
+        window.addEventListener('beforeunload', () => {
+          channel.close();
+        });
+      },
+      onError: (err, websocket) => {
+        websocket.close();
+        connectionState$.next(false);
+      },
     },
-    onError: (err, websocket) => {
-      websocket.close();
-      connectionState$.next(false);
-    },
-  });
+    () => launched$.getValue(),
+  );
 };
-
-connectionState$.subscribe((state) => {
-  if (!state) {
-    of('').pipe(delay(3000)).subscribe(connectToXSplit);
-    return;
+combineLatest(launched$, connectionState$).subscribe(([launched, state]) => {
+  if (launched && !state) {
+    connectToXSplit();
   }
 });
 
