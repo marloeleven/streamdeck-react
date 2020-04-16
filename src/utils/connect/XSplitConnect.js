@@ -22,7 +22,11 @@ const connectToXSplit = () => {
     {
       onOpen: (channel) => {
         XSplitHandler.send = (data) => {
-          channel.send(toString(data));
+          try {
+            channel.send(toString(data));
+          } catch (e) {
+            channel.close();
+          }
         };
         connectionState$.next(true);
 

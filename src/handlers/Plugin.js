@@ -2,6 +2,8 @@ import BaseHandler from './BaseHandler';
 import ActionsList from './ActionsListHandler';
 import EVENTS from 'const/events';
 
+import connectionState from 'utils/connect/state';
+
 class Plugin extends BaseHandler {
   // set an ACTION Context
   setState({ context, state }) {
@@ -88,6 +90,20 @@ class Plugin extends BaseHandler {
       event: EVENTS.TO.PROPERTY_INSPECTOR,
       payload,
     });
+  }
+
+  // updates Property inspector of connection state
+  sendConnectionState({ action, context }) {
+    if (action && context) {
+      this.sendToPropertyInspector({
+        action,
+        context,
+        payload: {
+          event: EVENTS.GET.XSPLIT_CONNECTION_STATE,
+          state: connectionState(),
+        },
+      });
+    }
   }
 }
 

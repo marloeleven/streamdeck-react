@@ -51,9 +51,11 @@ const getState = async () => {
 };
 
 const getAllList = async () => {
+  State.clearData();
+
   await XSplit.getAllOutputs().then((outputs = []) => State.setOutputList(outputs));
 
-  return await XSplit.getAllScenes().then(async (scenesList = []) => {
+  await XSplit.getAllScenes().then(async (scenesList = []) => {
     for (const sceneItem of scenesList) {
       await State.addScene(sceneItem).then(async (scene) => {
         await XSplit.getSceneSources(scene.id).then((sources) => scene.setSources(sources));
@@ -171,6 +173,8 @@ const onPropInspectorHandler = () => {
     }
 
     State.setActivePI(action, context);
+
+    Plugin.sendConnectionState(State.activePI);
   });
 
   Plugin.on(

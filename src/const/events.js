@@ -17,6 +17,7 @@ const EVENTS = {
     ALL_SCENES: 'getAllScenes',
     SCENE_SOURCES: 'getSceneSources',
     SCENE_PRESETS: 'getScenePresets',
+    XSPLIT_CONNECTION_STATE: 'getXSplitConnectionState',
   },
   SET: {
     SETTINGS: 'setSettings',

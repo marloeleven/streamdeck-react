@@ -70,6 +70,10 @@ class State {
       action: '',
       context: '',
     };
+    this.clearData();
+  }
+
+  clearData() {
     this.scenesList = new Map();
     this.outputList = [];
   }

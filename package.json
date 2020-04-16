@@ -21,7 +21,7 @@
     "unstated": "^2.1.1"
   },
   "scripts": {
-    "start": "set ENTRY_FILE=index.js && set OUTPUT_FILE=build.js && rescripts start",
+    "start": "set ENTRY_FILE=index.js&& set OUTPUT_FILE=build.js&& rescripts start",
     "build": "node compile",
     "test": "rescripts test",
     "eject": "rescripts eject",

@@ -1,15 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Provider, Subscribe } from 'unstated';
 
 import COMPONENTS from 'const/components';
 
 import PropertyInspector from 'handlers/PropertyInspector';
 
+import EVENTS from 'const/events';
+
 import Scene from 'containers/Scene';
 import Source from 'containers/Source';
 import Preset from 'containers/Preset';
 import Output from 'containers/Output';
 import Microphone from 'containers/Microphone';
+import Connection from 'containers/Connection';
 
 import { SDConnect } from 'utils/connect';
 
@@ -19,7 +22,7 @@ import PresetModel from 'PropertyInspector/model/Preset';
 import OutputModel from 'PropertyInspector/model/Output';
 import MicrophoneModel from 'PropertyInspector/model/Microphone';
 
-const renderComponent = (type) => {
+const Component = ({ type }) => {
   switch (type) {
     case COMPONENTS.SCENE:
       return <Subscribe to={[SceneModel]}>{(model) => <Scene model={model} />}</Subscribe>;
@@ -49,6 +52,7 @@ window.PropertyInspector = PropertyInspector;
 
 export default () => {
   const [isConnected, setIsConnected] = useState(false);
+  const [XSplitState, setXSplitState] = useState(1);
   const [componentType, setComponentType] = useState(COMPONENTS.SCENE);
 
   useEffect(() => {
@@ -57,12 +61,26 @@ export default () => {
 
       setComponentType(action.split('.').pop());
       setIsConnected(true);
+
+      PropertyInspector.on(EVENTS.GET.XSPLIT_CONNECTION_STATE, ({ state }) => {
+        setXSplitState(state);
+      });
     });
   }, []);
 
+  const RenderComponent = useCallback(
+    () => (
+      <>
+        <Component type={componentType} />
+        <Connection state={XSplitState} />
+      </>
+    ),
+    [componentType, XSplitState],
+  );
+
   return (
     <Provider>
-      {isConnected ? <div className="sdpi-wrapper">{renderComponent(componentType)}</div> : null}
+      <div className="sdpi-wrapper">{isConnected && <RenderComponent />}</div>
     </Provider>
   );
 };

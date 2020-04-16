@@ -30,9 +30,15 @@ export default () => {
     SDConnect(Plugin).then(() => {
       Plugin.on(EVENTS.PLUGIN.KEY_UP, handleKeyUp);
 
-      Plugin.on(EVENTS.PLUGIN.APP_LAUNCH, () => launched$.next(true));
+      Plugin.on(EVENTS.PLUGIN.APP_LAUNCH, () => {
+        launched$.next(true);
+        Plugin.sendConnectionState(State.activePI);
+      });
 
-      Plugin.on(EVENTS.PLUGIN.APP_TERMINATE, () => launched$.next(false));
+      Plugin.on(EVENTS.PLUGIN.APP_TERMINATE, () => {
+        launched$.next(false);
+        Plugin.sendConnectionState(State.activePI);
+      });
 
       subscribeToEvents();
     });
@@ -41,9 +47,12 @@ export default () => {
   }, []);
 
   useEffect(() => {
-    if (isConnected) {
-      onXSplitConnect();
-    }
+    (async () => {
+      if (isConnected) {
+        await onXSplitConnect();
+      }
+      Plugin.sendConnectionState(State.activePI);
+    })();
   }, [isConnected]);
 
   return null;
