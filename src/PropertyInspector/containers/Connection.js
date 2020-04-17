@@ -1,7 +1,7 @@
 import React from 'react';
 
 const TEXT = {
-  1: 'Open XSplit Broadcaster to start connection...',
+  1: 'Please launch XSplit Broadcaster',
   2: 'Connecting to XSplit Broadcaster...',
   3: '', // connected
 };
