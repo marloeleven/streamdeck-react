@@ -1,7 +1,8 @@
 import connect from 'streamdeck-xsplit-connect';
 import XSplitHandler from 'handlers/XSplit';
 import { toString, parse } from 'utils/function';
-import { BehaviorSubject, combineLatest } from 'rxjs';
+import { BehaviorSubject, combineLatest, fromEvent, of } from 'rxjs';
+import { merge, delay, takeWhile } from 'rxjs/operators';
 
 export const connectionState$ = new BehaviorSubject(false);
 export const launched$ = new BehaviorSubject(false);
@@ -31,12 +32,12 @@ const connectToXSplit = () => {
         connectionState$.next(true);
 
         channel.onmessage = onMessage;
-        channel.onclose = () => {
-          connectionState$.next(false);
-        };
-        channel.onerror = (err) => {
-          connectionState$.next(false);
-        };
+
+        fromEvent(channel, 'close')
+          .pipe(merge(fromEvent(channel, 'error')), delay(500))
+          .subscribe(() => {
+            connectionState$.next(false);
+          });
 
         window.addEventListener('beforeunload', () => {
           channel.close();
@@ -48,8 +49,19 @@ const connectToXSplit = () => {
       },
     },
     () => launched$.getValue(),
-  );
+  ).then((websocket) => {
+    of('')
+      .pipe(
+        delay(3000),
+        takeWhile(() => !connectionState$.getValue()),
+      )
+      .subscribe(() => {
+        websocket.close();
+        connectionState$.next(false);
+      });
+  });
 };
+
 combineLatest(launched$, connectionState$).subscribe(([launched, state]) => {
   if (launched && !state) {
     connectToXSplit();
