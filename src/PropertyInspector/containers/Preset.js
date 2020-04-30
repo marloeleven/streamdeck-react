@@ -7,6 +7,8 @@ import ACTIONS from 'const/actions';
 
 import Select from 'components/Select';
 
+import useEffectOnce from 'hooks/useEffectOnce';
+
 const getListValue = (list, id) => {
   const value = list.find((item) => item.id === id);
 
@@ -77,7 +79,7 @@ export default ({ model: { state, setSceneId, setScenesList, setPresetId, setPre
     });
   }, [state.sceneId, state.presetId, setScenesList, setSceneId, setPresetId, setPresetList]);
 
-  useEffect(() => {
+  useEffectOnce(() => {
     handler.setAction(ACTIONS.PRESET);
 
     handler.getSettings().then(async ({ settings: { sceneId, presetId } }) => {
@@ -92,7 +94,7 @@ export default ({ model: { state, setSceneId, setScenesList, setPresetId, setPre
       await setSceneId(scene.id);
       await setPresetId(preset);
     });
-  }, []);
+  });
 
   return (
     <>

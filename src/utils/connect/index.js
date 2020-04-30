@@ -1,2 +1,1 @@
-export { default as SDConnect } from "./SDConnect";
-export { default as XSplitConnect } from "./XSplitConnect";
+export { default as SDConnect } from './SDConnect';

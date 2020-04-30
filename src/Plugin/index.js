@@ -6,7 +6,7 @@ import ActionsList from 'handlers/ActionsListHandler';
 import EVENTS from 'const/events';
 
 import { SDConnect } from 'utils/connect';
-import connectToXSplit, { launched$ } from 'utils/connect/XSplitConnect';
+import { launched$ } from 'utils/connect/XSplitConnect';
 
 import useXSplit from 'hooks/useXSplit';
 
@@ -42,8 +42,6 @@ export default () => {
 
       subscribeToEvents();
     });
-
-    connectToXSplit();
   }, []);
 
   useEffect(() => {

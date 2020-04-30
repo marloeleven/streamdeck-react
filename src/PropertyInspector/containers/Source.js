@@ -8,6 +8,8 @@ import ACTIONS from 'const/actions';
 import Select from 'components/Select';
 import Input from 'components/Input';
 
+import useEffectOnce from 'hooks/useEffectOnce';
+
 const getListValue = (list, id) => {
   const value = list.find((item) => item.id === id);
 
@@ -74,7 +76,7 @@ export default ({
     });
   }, [state.sceneId, state.sourceId, setScenesList, setSceneId, setSourceId, setSourceList]);
 
-  useEffect(() => {
+  useEffectOnce(() => {
     handler.setAction(ACTIONS.SOURCE);
 
     handler.getSettings().then(async ({ settings: { sceneId, sourceId, toggleLinked } }) => {
@@ -90,7 +92,7 @@ export default ({
       await setSourceId(source.id);
       await setToggleLinked(toggleLinked);
     });
-  }, []);
+  });
 
   return (
     <>

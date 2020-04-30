@@ -8,8 +8,6 @@ class XSpltHandler {
   }
 
   onPayload(event, payload) {
-    console.warn('RECEIVED', event, payload);
-
     switch (event) {
       case EVENTS.XSPLIT.SET.ACTIVE_SCENE:
       case EVENTS.XSPLIT.GET.SCENE.ACTIVE:
@@ -82,7 +80,6 @@ class XSpltHandler {
     return xsplitRequest(event);
   }
 
-  // not used, replaced by toggleSourceState
   setSourceState(payload) {
     const event = EVENTS.XSPLIT.SET.SOURCE_STATE;
 
@@ -149,6 +146,14 @@ class XSpltHandler {
     return xsplitRequest(event);
   }
 
+  setOutputState(payload) {
+    const event = EVENTS.XSPLIT.SET.OUTPUT_STATE;
+
+    this.send({ event, payload });
+
+    return xsplitRequest(event);
+  }
+
   /* SCREENSHOT */
   doScreenshot() {
     const event = EVENTS.XSPLIT.DO.SCREENSHOT;
@@ -179,6 +184,14 @@ class XSpltHandler {
     return xsplitRequest(event);
   }
 
+  setMicrophoneState(payload) {
+    const event = EVENTS.XSPLIT.SET.MICROPHONE_STATE;
+
+    this.send({ event, payload });
+
+    return xsplitRequest(event);
+  }
+
   setPushToTalk(state) {
     const event = EVENTS.XSPLIT.SET.PUSH_TO_TALK;
     this.send({ event, payload: { state } });
@@ -197,6 +210,20 @@ class XSpltHandler {
 
   getSpeakerState() {
     const event = EVENTS.XSPLIT.GET.SPEAKER.STATE;
+    this.send({ event, payload: {} });
+
+    return xsplitRequest(event);
+  }
+
+  setSpeakerState(payload) {
+    const event = EVENTS.XSPLIT.SET.SPEAKER_STATE;
+    this.send({ event, payload });
+
+    return xsplitRequest(event);
+  }
+
+  ping() {
+    const event = EVENTS.XSPLIT.PING;
     this.send({ event, payload: {} });
 
     return xsplitRequest(event);

@@ -5,33 +5,58 @@ import EVENTS from 'const/events';
 import { LOCAL_RECORDING } from 'const';
 import State from './state';
 
-export const handleKeyUp = ({ action, context, payload: { settings } }) => {
+export const handleKeyUp = ({
+  action,
+  context,
+  payload: { settings, userDesiredState, isInMultiAction },
+}) => {
+  console.warn(action, { settings, userDesiredState, isInMultiAction });
   const showAlert = () => Plugin.showAlert({ context });
   switch (action) {
     case ACTIONS.SCENE:
       XSplit.setActiveScene(settings).catch(showAlert);
       break;
     case ACTIONS.SOURCE:
+      if (isInMultiAction) {
+        XSplit.setSourceState({ ...settings, state: userDesiredState }).catch(showAlert);
+        return;
+      }
       XSplit.toggleSourceState(settings).then(getSourceState).catch(showAlert);
       break;
     case ACTIONS.PRESET:
       XSplit.setActivePreset(settings).catch(showAlert);
       break;
     case ACTIONS.RECORD:
+      if (isInMultiAction) {
+        XSplit.setOutputState({ id: LOCAL_RECORDING, state: userDesiredState }).catch(showAlert);
+        return;
+      }
       XSplit.toggleOutputState({ id: LOCAL_RECORDING }).catch(showAlert);
       break;
     case ACTIONS.OUTPUT:
+      if (isInMultiAction) {
+        XSplit.setOutputState({ id: settings.id, state: userDesiredState }).catch(showAlert);
+        return;
+      }
       XSplit.toggleOutputState({ id: settings.id }).catch(showAlert);
       break;
     case ACTIONS.SCREENSHOT:
       XSplit.doScreenshot().catch(showAlert);
       break;
     case ACTIONS.MICROPHONE:
+      if (isInMultiAction) {
+        XSplit.setMicrophoneState({ state: userDesiredState }).catch(showAlert);
+        return;
+      }
       XSplit.toggleMicrophoneState()
         .then(({ state }) => toggleMicrophoneState(state))
         .catch(showAlert);
       break;
     case ACTIONS.SPEAKER:
+      if (isInMultiAction) {
+        XSplit.setSpeakerState({ state: userDesiredState }).catch(showAlert);
+        return;
+      }
       XSplit.toggleSpeakerState()
         .then(({ state }) => toggleSpeakerState(state))
         .catch(showAlert);

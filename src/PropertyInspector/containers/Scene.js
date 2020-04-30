@@ -7,6 +7,8 @@ import ACTIONS from 'const/actions';
 
 import Select from 'components/Select';
 
+import useEffectOnce from 'hooks/useEffectOnce';
+
 const getScene = (scenes, id) => {
   const scene = scenes.find((scene) => scene.id === id);
 
@@ -31,7 +33,7 @@ export default ({ model: { state, setScene, setList } }) => {
     });
   }, [state, setList, setScene]);
 
-  useEffect(() => {
+  useEffectOnce(() => {
     // specify the manifest plugin action
     handler.setAction(ACTIONS.SCENE);
 
@@ -43,7 +45,7 @@ export default ({ model: { state, setScene, setList } }) => {
       await setList(scenes);
       await setScene(scene);
     });
-  }, []);
+  });
 
   return (
     <Select value={state.id} onChange={onChange} label="Scene">

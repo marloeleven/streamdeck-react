@@ -1,11 +1,14 @@
 import React from 'react';
+import cx from 'classnames';
 import Item from 'components/Item';
+
+import css from './Select.module.css';
 
 const Select = ({ label, children, ...props }) => {
   return (
     <Item label={label}>
       <select
-        className="sdpi-item-value select"
+        className={cx(css.select, 'sdpi-item-value select')}
         {...props}
         style={{
           maxWidth: '229px',

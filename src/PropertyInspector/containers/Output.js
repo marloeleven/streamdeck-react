@@ -6,6 +6,7 @@ import EVENTS from 'const/events';
 import ACTIONS from 'const/actions';
 
 import Select from 'components/Select';
+import useEffectOnce from 'hooks/useEffectOnce';
 
 const getOutput = (outputs, id) => {
   const output = outputs.find((output) => output.id === id);
@@ -31,7 +32,7 @@ export default ({ model: { state, setOutput, setList } }) => {
     });
   }, [state, setList, setOutput]);
 
-  useEffect(() => {
+  useEffectOnce(() => {
     // specify the manifest plugin action
     handler.setAction(ACTIONS.OUTPUT);
 
@@ -43,10 +44,10 @@ export default ({ model: { state, setOutput, setList } }) => {
       await setList(outputs);
       await setOutput(output);
     });
-  }, []);
+  });
 
   return (
-    <Select value={state.id} onChange={onChange} label="Scene">
+    <Select value={state.id} onChange={onChange} label="Output">
       {state.list.map(({ id, name }) => (
         <Select.Option key={id} value={id}>
           {name}

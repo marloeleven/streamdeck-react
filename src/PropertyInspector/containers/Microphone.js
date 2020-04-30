@@ -1,21 +1,22 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 
 import handler from 'handlers/PropertyInspector';
 
 import ACTIONS from 'const/actions';
 
 import Input from 'components/Input';
+import useEffectOnce from 'hooks/useEffectOnce';
 
 export default ({ model: { state, setPushToTalk } }) => {
   const onTogglePushToTalk = ({ target }) => setPushToTalk(Number(target.checked));
 
-  useEffect(() => {
+  useEffectOnce(() => {
     handler.setAction(ACTIONS.MICROPHONE);
 
     handler.getSettings().then(async ({ settings: { pushToTalk } }) => {
       await setPushToTalk(pushToTalk);
     });
-  }, []);
+  });
 
   return (
     <>

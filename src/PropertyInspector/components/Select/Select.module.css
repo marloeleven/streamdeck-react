@@ -1,0 +1,9 @@
+.select :global(option) {
+  margin-left: 20px !important;
+}
+
+.select,
+.select :global(option) {
+  font-weight: normal;
+  letter-spacing: normal;
+}

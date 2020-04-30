@@ -49,6 +49,7 @@ const EVENTS = {
     APP_TERMINATE: 'applicationDidTerminate',
   },
   XSPLIT: {
+    PING: 'ping',
     GET: {
       SCENE: {
         ALL: 'getAllScenes',
@@ -75,6 +76,9 @@ const EVENTS = {
     },
     SET: {
       SOURCE_STATE: 'setSourceState',
+      OUTPUT_STATE: 'setOutputState',
+      MICROPHONE_STATE: 'setMicrophoneState',
+      SPEAKER_STATE: 'setSpeakerState',
       ACTIVE_SCENE: 'setActiveScene',
       ACTIVE_PRESET: 'setActivePreset',
       PUSH_TO_TALK: 'setPushToTalk',

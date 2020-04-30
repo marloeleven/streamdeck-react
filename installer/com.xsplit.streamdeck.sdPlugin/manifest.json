@@ -1,8 +1,8 @@
 {
   "Actions": [
     {
-      "Icon": "action/images/xsplit_scene_white", 
-      "Name": "Scene", 
+      "Icon": "action/images/xsplit_scene_white",
+      "Name": "Scene",
       "States": [
 				{
           "Image": "action/images/btn_xsplit_scene_inactive"
@@ -10,27 +10,29 @@
 				{
           "Image": "action/images/btn_xsplit_scene"
         }
-      ], 
-      "Tooltip": "Set Active Scene", 
+      ],
+      "Tooltip": "Activate a scene",
       "UUID": "com.xsplit.streamdeck.scene"
     },
 		{
-      "Icon": "action/images/xsplit_toggle_source_white", 
-      "Name": "Source", 
+      "Icon": "action/images/xsplit_toggle_source_white",
+      "Name": "Source",
       "States": [
 				{
+          "Name": "Hide",
           "Image": "action/images/btn_xsplit_toggle_source_inactive"
         },
 				{
+          "Name": "Show",
           "Image": "action/images/btn_xsplit_toggle_source"
         }
-      ], 
-      "Tooltip": "Activate/Deactivate Source", 
+      ],
+      "Tooltip": "Activate/Deactivate a source",
       "UUID": "com.xsplit.streamdeck.source"
     },
 		{
-      "Icon": "action/images/btn_xsplit_presetswitch_white", 
-      "Name": "Preset", 
+      "Icon": "action/images/btn_xsplit_presetswitch_white",
+      "Name": "Preset",
       "States": [
 				{
           "Image": "action/images/btn_xsplit_presetswitch_inactive"
@@ -38,96 +40,104 @@
 				{
           "Image": "action/images/btn_xsplit_presetswitch"
         }
-      ], 
-      "Tooltip": "Activate Scene Preset", 
+      ],
+      "Tooltip": "Activate a scene preset",
       "UUID": "com.xsplit.streamdeck.preset"
     },
 		{
-      "Icon": "action/images/xsplit_toggle_output_white", 
-      "Name": "Output", 
+      "Icon": "action/images/xsplit_toggle_output_white",
+      "Name": "Output",
       "States": [
 				{
+          "Name": "Deactivate",
           "Image": "action/images/btn_xsplit_toggle_output_inactive"
         },
 				{
+          "Name": "Activate",
           "Image": "action/images/btn_xsplit_toggle_output"
         }
-      ], 
-      "Tooltip": "Start/Stop Stream Output", 
+      ],
+      "Tooltip": "Activate/Deactivate an output",
       "UUID": "com.xsplit.streamdeck.output"
     },
 		{
-      "Icon": "action/images/xsplit_toggle_recording_white", 
-      "Name": "Record", 
+      "Icon": "action/images/xsplit_toggle_recording_white",
+      "Name": "Record",
       "States": [
 				{
+          "Name": "Stop",
           "Image": "action/images/btn_xsplit_toggle_recording_inactive"
         },
 				{
+          "Name": "Start",
           "Image": "action/images/btn_xsplit_toggle_recording"
         }
-      ], 
-      "Tooltip": "Start/Stop recording", 
+      ],
+      "Tooltip": "Start/Stop recording",
       "UUID": "com.xsplit.streamdeck.record"
     },
 		{
-      "Icon": "action/images/xsplit_screenshot_white", 
-      "Name": "Screenshot", 
+      "Icon": "action/images/xsplit_screenshot_white",
+      "Name": "Screenshot",
       "States": [
 				{
           "Image": "action/images/btn_xsplit_screenshot"
         }
-      ], 
-      "Tooltip": "Take a snapshot of your screen", 
+      ],
+      "Tooltip": "Take a snapshot of your screen",
       "UUID": "com.xsplit.streamdeck.screenshot"
     },
 		{
-      "Icon": "action/images/xsplit_toggle_microphone_white", 
-      "Name": "Microphone", 
+      "Icon": "action/images/xsplit_toggle_microphone_white",
+      "Name": "Microphone",
       "States": [
 				{
+          "Name": "Deactivate",
           "Image": "action/images/btn_xsplit_toggle_microphone_inactive"
         },
 				{
+          "Name": "Activate",
           "Image": "action/images/btn_xsplit_toggle_microphone"
         }
-      ], 
-      "Tooltip": "Take a snapshot of your screen", 
+      ],
+      "Tooltip": "Activate/Deactivate microphone",
       "UUID": "com.xsplit.streamdeck.microphone"
     },
 		{
-      "Icon": "action/images/xsplit_toggle_desktop_audio_white", 
-      "Name": "Speaker", 
+      "Icon": "action/images/xsplit_toggle_desktop_audio_white",
+      "Name": "Speaker",
       "States": [
 				{
+          "Name": "Deactivate",
           "Image": "action/images/btn_xsplit_toggle_desktop_audio_inactive"
         },
 				{
+          "Name": "Activate",
           "Image": "action/images/btn_xsplit_toggle_desktop_audio"
         }
-      ], 
-      "Tooltip": "Take a snapshot of your screen", 
+      ],
+      "Tooltip": "Activate/Deactivate speaker",
       "UUID": "com.xsplit.streamdeck.speaker"
     }
-  ], 
+  ],
   "SDKVersion": 2,
-  "Author": "Splitmedialabs", 
-  "CodePath": "index.html", 
-  "PropertyInspectorPath": "index_pi.html", 
-  "Description": "XSplit Streamdeck Plugin.", 
-  "Name": "XSplit Controller", 
-  "Icon": "action/images/btn_xsplit_scene_inactive", 
+  "Author": "Splitmedialabs",
+  "CodePath": "index.html",
+  "PropertyInspectorPath": "index_pi.html",
+  "Description": "XSplit Streamdeck Plugin.",
+  "Name": "XSplit Controller",
+  "Icon": "action/images/btn_xsplit_scene_inactive",
 	"Category": "XSplit Broadcaster",
-	"CategoryIcon": "action/images/cat_icon-xsplit", 
-  "URL": "https://www.xsplit.com/", 
+	"CategoryIcon": "action/images/cat_icon-xsplit",
+  "URL": "https://www.xsplit.com/",
   "Version": "1.0",
   "OS": [
     {
-        "Platform": "mac", 
+        "Platform": "mac",
         "MinimumVersion" : "10.11"
     },
     {
-        "Platform": "windows", 
+        "Platform": "windows",
         "MinimumVersion" : "10"
     }
   ],
@@ -137,7 +147,7 @@
       "XSplit.Core.exe"
     ]
   },
-  "Software": 
+  "Software":
     {
         "MinimumVersion" : "4.1"
     }
