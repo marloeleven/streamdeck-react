@@ -1,3 +1,5 @@
+import EVENTS from 'const/events';
+
 const callbacks = {};
 
 const ASYNC_TIMEOUT = 5000;
@@ -42,4 +44,11 @@ export const xsplitRequest = (eventName) => {
 
     return result;
   });
+};
+
+export const clearPing = () => {
+  if (callbacks.hasOwnProperty(EVENTS.XSPLIT.PING)) {
+    console.warn('CLEAR PING');
+    callbacks[EVENTS.XSPLIT.PING].callback();
+  }
 };

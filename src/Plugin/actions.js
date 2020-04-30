@@ -86,11 +86,7 @@ const loopThroughList = (action, callback) => {
 };
 
 const wrapAsyncCallback = (callback) =>
-  new Promise((resolve) =>
-    callback()
-      .then(resolve)
-      .catch((e) => console.log('this waht', e)),
-  );
+  new Promise((resolve) => callback().then(resolve).catch(console.error));
 
 const asyncLoopThroughList = async (action, callback) => {
   const list = getList(action);

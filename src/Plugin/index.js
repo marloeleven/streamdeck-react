@@ -47,6 +47,7 @@ export default () => {
   useEffect(() => {
     (async () => {
       if (isConnected) {
+        console.warn('CONNECTED');
         await onXSplitConnect();
       }
       Plugin.sendConnectionState(State.activePI);

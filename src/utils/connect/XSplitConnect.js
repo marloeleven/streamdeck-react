@@ -3,6 +3,7 @@ import XSplitHandler from 'handlers/XSplit';
 import { toString, parse } from 'utils/function';
 import { BehaviorSubject, Subject, combineLatest, fromEvent, of } from 'rxjs';
 import { merge, delay, takeWhile, filter, distinctUntilChanged } from 'rxjs/operators';
+import { clearPing } from 'handlers/AsyncRequest';
 import throttle from 'lodash/throttle';
 
 export const connectionState$ = new BehaviorSubject(false);
@@ -12,7 +13,9 @@ export const ping$ = new Subject();
 
 ping$.pipe(filter(() => connectionState$.getValue())).subscribe(() => {
   XSplitHandler.ping().catch(() => {
-    connectionState$.next(false);
+    if (connectionState$.getValue()) {
+      connectionState$.next(false);
+    }
   });
 });
 
@@ -22,6 +25,7 @@ const sendPing = throttle(() => ping$.next(), 3000, {
 });
 
 const connectToXSplit = () => {
+  console.warn('CONNECTING');
   const onMessage = ({ data }) => {
     try {
       const { event, payload } = parse(data);
@@ -42,7 +46,9 @@ const connectToXSplit = () => {
             sendPing();
             channel.send(toString(data));
           } catch (e) {
-            channel.close();
+            if (channel.readyState !== 'closed') {
+              channel.close();
+            }
           }
         };
         connectionState$.next(true);
@@ -83,9 +89,13 @@ const connectToXSplit = () => {
 };
 
 combineLatest(launched$, connectionState$)
-  .pipe(distinctUntilChanged())
+  .pipe(
+    distinctUntilChanged(),
+    filter(() => connectionState$.getValue() === false),
+  )
   .subscribe(([launched, state]) => {
     if (launched && !state) {
+      clearPing();
       connectToXSplit();
     }
   });
