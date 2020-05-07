@@ -1,7 +1,7 @@
+import XSplit from 'streamdeck-xsplit-connect';
 import once from 'lodash/fp/once';
 
 import Plugin from 'handlers/Plugin';
-import XSplit from 'handlers/XSplit';
 
 import EVENTS from 'const/events';
 import ACTIONS from 'const/actions';

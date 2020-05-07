@@ -1,14 +1,12 @@
+import XSplit from 'streamdeck-xsplit-connect';
 import { useEffect, useState } from 'react';
 import Plugin from 'handlers/Plugin';
-import XSplit from 'handlers/XSplit';
 import ActionsList from 'handlers/ActionsListHandler';
 
 import EVENTS from 'const/events';
 
 import { SDConnect } from 'utils/connect';
-import { launched$ } from 'utils/connect/XSplitConnect';
-
-import useXSplit from 'hooks/useXSplit';
+import { launched$, connectionState$ } from 'utils/connect/XSplitConnect';
 
 import { handleKeyUp } from './actions';
 import { subscribeToEvents, onXSplitConnect } from './handler';
@@ -23,8 +21,6 @@ window.State = State;
 
 export default () => {
   const [isConnected, setIsConnected] = useState(false);
-
-  useXSplit(setIsConnected);
 
   useEffect(() => {
     SDConnect(Plugin).then(() => {
@@ -42,6 +38,8 @@ export default () => {
 
       subscribeToEvents();
     });
+
+    connectionState$.subscribe((bool) => setIsConnected(bool));
   }, []);
 
   useEffect(() => {

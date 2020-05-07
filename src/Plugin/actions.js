@@ -1,5 +1,5 @@
+import XSplit from 'streamdeck-xsplit-connect';
 import ActionsList from 'handlers/ActionsListHandler';
-import XSplit from 'handlers/XSplit';
 import ACTIONS from 'const/actions';
 import EVENTS from 'const/events';
 import { LOCAL_RECORDING } from 'const';
